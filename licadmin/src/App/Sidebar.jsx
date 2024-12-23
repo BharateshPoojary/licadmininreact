@@ -1,6 +1,7 @@
 import React from 'react'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import { NavLink } from 'react-router-dom';
+import liclogo from '../assets/images/LIC-Logo.png';
 const Sidebar = () => {
     return (
         <div>
@@ -9,7 +10,9 @@ const Sidebar = () => {
                 {/* Sidebar scroll */}
                 <div>
                     <div className="brand-logo d-flex align-items-center justify-content-between">
-
+                        <NavLink to="/" className="text-nowrap logo-img" id="">
+                            <img src={liclogo} alt="lic-logo" className='img-fluid' />
+                        </NavLink>
                         <div
                             className="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
                             id="sidebarCollapse"

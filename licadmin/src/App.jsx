@@ -1,17 +1,14 @@
-
-
-import Mainwrapper from './Mainwrapper'
-import Header from './App/Header'
-import Sidebar from './App/Sidebar'
-import Dashboard from './App/Dashboard'
+import Mainwrapper from './Mainwrapper.jsx'
+import Header from './App/Header.jsx'
+import Sidebar from './App/Sidebar.jsx'
+import Dashboard from './App/Dashboard.jsx'
 
 function App() {
-
   return (
     <>
       <Mainwrapper>
         <Sidebar />
-        <div className="body-wrapper ">
+        <div className="body-wrapper">
           <Header />
           <Dashboard />
         </div>

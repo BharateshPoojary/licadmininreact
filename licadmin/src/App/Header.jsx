@@ -1,5 +1,4 @@
 import React from 'react'
-import { Icon } from '@iconify/react/dist/iconify.js'
 import user from "../assets/images/profile/user-1.jpg";
 const Header = () => {
     return (
