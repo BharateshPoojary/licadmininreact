@@ -1,7 +1,7 @@
 import Mainwrapper from './Mainwrapper.jsx'
-import Header from './App/Header.jsx'
-import Sidebar from './App/Sidebar.jsx'
-import Dashboard from './App/Dashboard.jsx'
+import Header from './Components/Header.jsx'
+import Sidebar from './Components/Sidebar.jsx'
+import { Outlet } from 'react-router-dom'
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <Sidebar />
         <div className="body-wrapper">
           <Header />
-          <Dashboard />
+          <Outlet />
         </div>
       </Mainwrapper>
     </>
