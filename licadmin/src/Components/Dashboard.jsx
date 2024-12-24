@@ -13,7 +13,6 @@ const Dashboard = () => {
         } catch (error) {
             console.log(error.response?.data || error.message);
         }
-
     }
     useEffect(() => {
         fetchIndexData();
