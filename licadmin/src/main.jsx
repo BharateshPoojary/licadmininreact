@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import store from './App/store.js';
 import Dashboard from './Components/Dashboard.jsx';
 import SubCat from './Components/SubCat.jsx';
+import Template from './Components/Template.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')).render(
             <Route index element={<Dashboard />} />
             <Route path='subcat' element={<SubCat />} />
           </Route>
+          <Route path='template' element={<Template />} />
         </Routes>
       </BrowserRouter>
     </Provider>

@@ -1,6 +1,7 @@
 import React from 'react'
 
 const SubCatCard = ({ tempName, tempImg, emptysubcatmessage }) => {
+
     return (
         <div>
             {emptysubcatmessage ? (<h3>{emptysubcatmessage}</h3>) :
