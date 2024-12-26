@@ -1,15 +1,9 @@
-import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { setStateCatId, setStateCatName } from '../slice/indexCatSlice';
+import React from 'react'
 import { useNavigate } from 'react-router-dom';
-
 const Dashboardcard = ({ catId, catName, catIcon, emptyCategoryMessage }) => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const handleIndex = () => {
-        dispatch(setStateCatId(catId));
-        dispatch(setStateCatName(catName));
-        navigate('subcat');
+        navigate(`/subcat/${catId}/${catName}`);
     }
     return (
         <div>

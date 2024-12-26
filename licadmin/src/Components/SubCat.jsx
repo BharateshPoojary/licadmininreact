@@ -1,34 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import SubCatCard from './SubCatCard';
 import axios from 'axios';
-import { setTempId, setTempImg, setTempName } from '../slice/tempSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 const SubCat = () => {
-    const dispatch = useDispatch();
+    const { catid, catname } = useParams();
     const navigate = useNavigate();
     const [subCategories, setSubCategories] = useState([]);
-    const { stateCatId, stateCatName } = useSelector(state => state.indexCatSlice);
-    console.log(stateCatId, stateCatName);
+
     const fetchSubCatData = async () => {
         try {
-            const response = await axios.get(`http://lic.swiftmore.in/LicAdmin/viewallapi.php?catId=${stateCatId}`);
+            const response = await axios.get(`http://lic.swiftmore.in/LicAdmin/viewallapi.php?catId=${catid}`);
             console.log(response.data);
             const { Details } = response.data;
             setSubCategories(Details || []);
         } catch (error) {
             console.log(error.response?.data || error.message);
         }
-
     }
     useEffect(() => {
         fetchSubCatData();
     }, [])
     const handleTemplate = (tempId, tempName, tempImg) => {
-        dispatch(setTempId(tempId))
-        dispatch(setTempName(tempName));
-        dispatch(setTempImg(tempImg))
-        navigate("/template");
+        localStorage.setItem("Image", JSON.stringify({ tempImg }));
+        navigate(`/template/${tempId}/${tempName}`);
+
     }
     return (
         <div>
@@ -37,7 +32,7 @@ const SubCat = () => {
                     <div className="card ">
                         <div className="card-body">
                             <div className="row">
-                                <h2 className=" fs-5 card-title fw-semibold mb-4" >{stateCatName} Templates</h2>
+                                <h2 className=" fs-5 card-title fw-semibold mb-4" >{catname} Templates</h2>
                                 {subCategories.length > 0 ?
                                     subCategories.map((subcat) => (
                                         <div className="col-lg-4  col-sm-6 imageContainer" key={subcat.tempId} style={{ cursor: "pointer" }} onClick={() => handleTemplate(subcat.tempId, subcat.tempName, subcat.tempImg)}>
@@ -48,7 +43,7 @@ const SubCat = () => {
                                             />
                                         </div>
                                     )) :
-                                    (<SubCatCard emptysubcatmessage={`No ${stateCatName} templates added `} />)}
+                                    (<SubCatCard emptysubcatmessage={`No ${catname} templates added `} />)}
                             </div>
                         </div>
                     </div>

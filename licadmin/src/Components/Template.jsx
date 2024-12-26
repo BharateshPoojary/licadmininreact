@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useRef, useState } from 'react'
 import Croppie from 'croppie';
 import './croppie.css';
 import "./croppie.js";
 import { Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 const Template = () => {
-    const { tempId, tempName, tempImg } = useSelector(state => state.tempSlice);
-    console.log(tempId, tempName, tempImg)
+    const navigate = useNavigate();
+    const { tempid, tempname } = useParams();
+    const { tempImg } = JSON.parse(localStorage.getItem("Image"));
     const [Name, setName] = useState('');
     const [ARN_NO, setARN_NO] = useState('');
     const [Contact_No, setContact_No] = useState('');
@@ -73,13 +74,15 @@ const Template = () => {
             formData.append('Name', Name);
             formData.append('ARN_NO', ARN_NO);
             formData.append('Contact_No', Contact_No);
-            formData.append('tempId', tempId);
+            formData.append('tempId', tempid);
             formData.append('Email', Email);
             formData.append('Address', City);
             formData.append('Attachment', Attachment);
             console.log(Attachment)
             const post_response = await axios.post("http://lic.swiftmore.in/LicAdmin/insertDataapi.php", formData);
             console.log(post_response.data);
+            const { id } = post_response.data;
+            navigate(`/manufacturingpdf/${id}`);
         } catch (error) {
             console.log(error.response?.data || error.message);
         }
@@ -89,7 +92,7 @@ const Template = () => {
             <div className="card">
                 <div className="card-body">
                     <div className="img-fluid">
-                        <img width="100%" src={`http://lic.swiftmore.in/LicAdmin/${tempImg}`} alt={tempName} />
+                        <img width="100%" src={`http://lic.swiftmore.in/LicAdmin/${tempImg}`} alt={tempname} />
                     </div>
                     <form className='mt-2 rounded' style={{
                         backgroundImage: "url('http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png')",

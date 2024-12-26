@@ -15,9 +15,9 @@ createRoot(document.getElementById('root')).render(
         <Routes>
           <Route element={<App />} >
             <Route index element={<Dashboard />} />
-            <Route path='subcat' element={<SubCat />} />
+            <Route path='subcat/:catid/:catname' element={<SubCat />} />
           </Route>
-          <Route path='template' element={<Template />} />
+          <Route path='template/:tempid/:tempname' element={<Template />} />
           <Route path='manufacturingpdf/:id' element={<ManufacturingFundPdf />} />
         </Routes>
       </BrowserRouter>
