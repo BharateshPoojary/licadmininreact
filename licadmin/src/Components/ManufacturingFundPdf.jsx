@@ -1,9 +1,11 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 const ManufacturingFundPdf = () => {
+    const cardbody = useRef();
     const { id, tempname } = useParams();
     const { tempImg } = JSON.parse(localStorage.getItem("Image"));
     const [getName, setGetName] = useState('');
@@ -33,10 +35,43 @@ const ManufacturingFundPdf = () => {
         }
         fetchData();
     }, [id])
+    const DownloadPDF = async () => {
+        const element = cardbody.current; // You can specify a specific element instead of the whole body.
+        // Capture the content as a canvas
+        const canvas = await html2canvas(element, { useCORS: true });
+        // Convert the canvas to an image
+        const imgData = canvas.toDataURL("image/png");
+        // Create a PDF document
+        const pdf = new jsPDF("p", "mm", "a4");
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        // Add the image to the PDF
+        let heightLeft = imgHeight;
+        let position = 0;
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        while (heightLeft > 0) {
+            position -= pageHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+        // Download the PDF
+        pdf.save("page.pdf");
+
+    }
     return (
         <div>
             <div className="card ">
-                <div className="card-body p-5">
+                <div className='d-flex justify-content-end p-3 '>
+                    <Icon
+                        icon="material-symbols:download"
+                        className="nav-small-cap-icon fs-1 bg-warning  rounded-circle"
+                        style={{ cursor: "pointer" }} onClick={DownloadPDF}
+                    ></Icon>
+                </div>
+                <div className="card-body p-4" ref={cardbody}>
                     <div >
                         <img width="100%" src={`http://lic.swiftmore.in/LicAdmin/${tempImg}`} alt={tempname} className="img-fluid" />
                     </div>
