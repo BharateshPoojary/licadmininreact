@@ -7,6 +7,7 @@ import store from './App/store.js';
 import Dashboard from './Components/Dashboard.jsx';
 import SubCat from './Components/SubCat.jsx';
 import Template from './Components/Template.jsx';
+import ManufacturingFundPdf from './Components/ManufacturingFundPdf.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')).render(
             <Route path='subcat' element={<SubCat />} />
           </Route>
           <Route path='template' element={<Template />} />
+          <Route path='manufacturingpdf/:id' element={<ManufacturingFundPdf />} />
         </Routes>
       </BrowserRouter>
     </Provider>
