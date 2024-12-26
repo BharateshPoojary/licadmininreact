@@ -13,7 +13,7 @@ const Template = () => {
     const [ARN_NO, setARN_NO] = useState('');
     const [Contact_No, setContact_No] = useState('');
     const [Email, setEmail] = useState('');
-    const [City, setCity] = useState('');
+    const [Address, setAddress] = useState('');
     const [Attachment, setAttachment] = useState({});
     const croppieRef = useRef(null);
     const [isUploadedImg, setIsUploadedImg] = useState(false);
@@ -72,17 +72,17 @@ const Template = () => {
         try {
             const formData = new FormData();
             formData.append('Name', Name);
-            formData.append('ARN_NO', ARN_NO);
+            formData.append('ARN_No', ARN_NO);
             formData.append('Contact_No', Contact_No);
             formData.append('tempId', tempid);
             formData.append('Email', Email);
-            formData.append('Address', City);
+            formData.append('Address', Address);
             formData.append('Attachment', Attachment);
             console.log(Attachment)
             const post_response = await axios.post("http://lic.swiftmore.in/LicAdmin/insertDataapi.php", formData);
             console.log(post_response.data);
             const { id } = post_response.data;
-            navigate(`/manufacturingpdf/${id}`);
+            navigate(`/manufacturingpdf/${id}/${tempname}`);
         } catch (error) {
             console.log(error.response?.data || error.message);
         }
@@ -101,10 +101,7 @@ const Template = () => {
                         padding: "3vw",
 
                     }} onSubmit={handleFormSubmit}>
-
-                        <div className="col-md-12">
-                            <div className='text-center h2' style={{ fontWeight: "bold", color: "blue" }}>To Know More, Please Contact Our Distributor Partner:</div>
-                        </div>
+                        <div className='text-center h2' style={{ fontWeight: "bold", color: "blue" }}>To Know More, Please Contact Our Distributor Partner:</div>
                         <div className="row">
                             <div className="col-md-3 text-center">
                                 <label style={{ cursor: "pointer" }} className='position-relative'>
@@ -136,7 +133,7 @@ const Template = () => {
                                     <div className="col-md-6">
                                         <div className="mb-3">
                                             <label htmlFor="City" className="form-label" >City:</label>
-                                            <input type="text" className="form-control bg-light" id="City" required onChange={(e) => setCity(e.target.value)} />
+                                            <input type="text" className="form-control bg-light" id="City" required onChange={(e) => setAddress(e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="col-md-6">
