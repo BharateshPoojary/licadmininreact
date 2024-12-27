@@ -7,4 +7,9 @@ export default defineConfig({
     host: "0.0.0.0", // Exposes the server to all network interfaces
   },
   plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
 });
