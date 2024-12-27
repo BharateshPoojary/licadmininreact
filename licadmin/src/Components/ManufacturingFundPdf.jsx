@@ -51,12 +51,12 @@ const ManufacturingFundPdf = () => {
     }
     useEffect(() => {
         const fetchImage = async () => {
-            const corsissuereolveurl = 'https://cors-anywhere.herokuapp.com/';
-            const attachmentImage = await convertImageToBase64(corsissuereolveurl + getAttachment);
+            const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
+            const attachmentImage = await convertImageToBase64(corsissueresolveurl + getAttachment);
             setAttachmentImage(attachmentImage);
-            const tempImage = await convertImageToBase64(`${corsissuereolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
+            const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
             setTempImage(tempImage)
-            const attachmentBGImage = await convertImageToBase64(`${corsissuereolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
+            const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
             setBGImage(attachmentBGImage)
         }
         fetchImage();
@@ -82,9 +82,9 @@ const ManufacturingFundPdf = () => {
         const imgData = canvas.toDataURL("image/png");
         // Create a PDF document
         const pdf = new jsPDF("p", "mm", "a4");
-        const imgWidth = 210; // A4 width in mm
+        const imgWidth = 190; // A4 width in mm
+        const imgHeight = 270;
         const pageHeight = 297; // A4 height in mm
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
         // Add the image to the PDF
         let heightLeft = imgHeight;
         let position = 0;
@@ -98,24 +98,22 @@ const ManufacturingFundPdf = () => {
         }
         // Download the PDF
         pdf.save("page.pdf");
-
     }
     return (
         <div>
-
             <div className="card ">
                 <div className='d-flex justify-content-end p-3 '>
                     <Icon
                         icon="material-symbols:download"
-                        className="nav-small-cap-icon fs-1 bg-warning  rounded-circle"
-                        style={{ cursor: "pointer" }} onClick={DownloadPDF}
+                        className="nav-small-cap-icon fs-1 bg-warning  rounded-circle no-print "
+                        style={{ cursor: "pointer" }} onClick={DownloadPDF} aria-disabled="true"
                     ></Icon>
                 </div>
                 <div className="card-body p-4" ref={cardbody}>
                     <div >
                         <img width="100%" src={tempImage} alt={tempname} className="img-fluid" />
                     </div>
-                    <div className='row mt-2 rounded' style={{
+                    <div className='row mt-2 rounded bgprint' style={{
                         backgroundImage: `url(${BGImage})`,
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
@@ -172,7 +170,7 @@ const ManufacturingFundPdf = () => {
                                         icon="ic:round-email"
                                         className="nav-small-cap-icon fs-4"
                                     ></Icon>
-                                    <p className='fs-4 bold'>{getEmail}</p>
+                                    <p className='fs-5 bold'>{getEmail}</p>
                                 </div>
                             </div>
                         </div>
