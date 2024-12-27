@@ -14,6 +14,9 @@ const ManufacturingFundPdf = () => {
     const [getContact_No, setContact_No] = useState('');
     const [getARN_No, setARN_NO] = useState('');
     const [getAttachment, setAttachment] = useState('http://lic.swiftmore.in/LicAdmin/images/Profile%20Photo.png');
+    const [BGImage, setBGImage] = useState('');
+    const [tempImage, setTempImage] = useState('');
+    const [attachmentImage, setAttachmentImage] = useState('');
     const getUserData = async (id) => {
         try {
             const getresponse = await axios.get(`http://lic.swiftmore.in/LicAdmin/ManufacturingFundPdfApi.php?Id=${id}`);
@@ -23,10 +26,46 @@ const ManufacturingFundPdf = () => {
             console.log(error.response?.data || error.message);
         }
     }
+    const convertImageToBase64 = async (url) => {
+        try {
+            const ImageUrlResponse = await axios.get(url, { responseType: "blob" });
+            console.log(ImageUrlResponse.data);
+            const base64url = await convertblobToBase64(ImageUrlResponse.data);
+            console.log("URL CONVERTED TO BLOB", base64url);
+            return base64url;
+        } catch (error) {
+            console.log(error.response?.data || error.message);
+        }
+    }
+    const convertblobToBase64 = (blob) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                resolve(reader.result)
+            }
+            reader.onerror = (error) => {
+                reject(error)
+            }
+            reader.readAsDataURL(blob)//It will trigger the onload end event if the blob is converted to base64 else error will be onerror will be triggered
+        })
+    }
+    useEffect(() => {
+        const fetchImage = async () => {
+            const corsissuereolveurl = 'https://cors-anywhere.herokuapp.com/';
+            const attachmentImage = await convertImageToBase64(corsissuereolveurl + getAttachment);
+            setAttachmentImage(attachmentImage);
+            const tempImage = await convertImageToBase64(`${corsissuereolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
+            setTempImage(tempImage)
+            const attachmentBGImage = await convertImageToBase64(`${corsissuereolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
+            setBGImage(attachmentBGImage)
+        }
+        fetchImage();
+    }, [getAttachment])
+
     useEffect(() => {
         const fetchData = async () => {
             const { Name, Address, Email, Contact_No, ARN_No, Attachment } = await getUserData(id);
-            setAttachment(Attachment);
+            setAttachment(`http://lic.swiftmore.in/LicAdmin/${Attachment}`);
             setARN_NO(ARN_No);
             setContact_No(Contact_No);
             setGetEmail(Email);
@@ -38,7 +77,7 @@ const ManufacturingFundPdf = () => {
     const DownloadPDF = async () => {
         const element = cardbody.current; // You can specify a specific element instead of the whole body.
         // Capture the content as a canvas
-        const canvas = await html2canvas(element, { useCORS: true });
+        const canvas = await html2canvas(element, { useCORS: true, allowTaint: true, });
         // Convert the canvas to an image
         const imgData = canvas.toDataURL("image/png");
         // Create a PDF document
@@ -63,6 +102,7 @@ const ManufacturingFundPdf = () => {
     }
     return (
         <div>
+
             <div className="card ">
                 <div className='d-flex justify-content-end p-3 '>
                     <Icon
@@ -73,10 +113,10 @@ const ManufacturingFundPdf = () => {
                 </div>
                 <div className="card-body p-4" ref={cardbody}>
                     <div >
-                        <img width="100%" src={`http://lic.swiftmore.in/LicAdmin/${tempImg}`} alt={tempname} className="img-fluid" />
+                        <img width="100%" src={tempImage} alt={tempname} className="img-fluid" />
                     </div>
                     <div className='row mt-2 rounded' style={{
-                        backgroundImage: "url('http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png')",
+                        backgroundImage: `url(${BGImage})`,
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
                         padding: "3vw",
@@ -85,7 +125,7 @@ const ManufacturingFundPdf = () => {
                         <div className="col-md-3">
                             <div className='d-flex align-items-center justify-content-center'>
 
-                                <img className="img-fluid" src={`http://lic.swiftmore.in/LicAdmin/${getAttachment}`} alt="image" />
+                                <img className="img-fluid" src={attachmentImage} alt="image" />
                             </div>
 
                         </div>

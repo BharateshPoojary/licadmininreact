@@ -23,7 +23,6 @@ const Template = () => {
     const [showModal, setShowModal] = useState(false);
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-
         console.log(file);
         if (file) {
             const reader = new FileReader();
@@ -31,6 +30,7 @@ const Template = () => {
             reader.onload = (e) => {
                 setShowModal(true); // Show the modal
                 setImgUrl(e.target.result);
+                console.log("Data", e.target.result);
             }
         }
     };
@@ -56,7 +56,7 @@ const Template = () => {
                 size: { width: 150, height: 200 },
             }).then((base64Image) => {
                 setImagePreview(base64Image);
-                console.log(base64Image);
+                console.log("Base 64", base64Image);
                 setShowModal(false); // Close the modal
                 setIsUploadedImg(true);
                 const fileName = "cropped-image.jpg"; // Choose a suitable name
