@@ -5,7 +5,11 @@ import { useParams } from 'react-router-dom'
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Loader from './Loader.jsx';
+import { setLoading } from '@/slice/loading.js';
+import { useDispatch, useSelector } from 'react-redux';
 const ManufacturingFundPdf = () => {
+    const dispatch = useDispatch();
+    const { loading } = useSelector(state => state.loadingSlice);
     const cardbody = useRef();
     const { id, tempname } = useParams();
     const { tempImg } = JSON.parse(localStorage.getItem("Image"));
@@ -19,12 +23,11 @@ const ManufacturingFundPdf = () => {
     const [BGImage, setBGImage] = useState('');
     const [tempImage, setTempImage] = useState('');
     const [attachmentImage, setAttachmentImage] = useState('');
-    const [imageLoading, setImageLoading] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const getUserData = async (id) => {
         try {
             const getresponse = await axios.get(`http://lic.swiftmore.in/LicAdmin/ManufacturingFundPdfApi.php?Id=${id}`);
-            console.log(getresponse.data);
+            // console.log(getresponse.data);
             return getresponse.data;
         } catch (error) {
             console.log(error.response?.data || error.message);
@@ -34,9 +37,9 @@ const ManufacturingFundPdf = () => {
     const convertImageToBase64 = async (url) => {
         try {
             const ImageUrlResponse = await axios.get(url, { responseType: "blob" });
-            console.log(ImageUrlResponse.data);
+            // console.log(ImageUrlResponse.data);
             const base64url = await convertblobToBase64(ImageUrlResponse.data);
-            console.log("URL CONVERTED TO BLOB", base64url);
+            // console.log("URL CONVERTED TO BLOB", base64url);
             return base64url;
         } catch (error) {
             console.log(error.response?.data || error.message);
@@ -57,7 +60,7 @@ const ManufacturingFundPdf = () => {
     }
     useEffect(() => {
         const fetchImage = async () => {
-            setImageLoading(true)
+            dispatch(setLoading(true))
             const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
             const attachmentImage = await convertImageToBase64(corsissueresolveurl + getAttachment);
             setAttachmentImage(attachmentImage);
@@ -65,7 +68,7 @@ const ManufacturingFundPdf = () => {
             setTempImage(tempImage)
             const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
             setBGImage(attachmentBGImage)
-            setImageLoading(false)
+            dispatch(setLoading(false))
         }
         fetchImage();
     }, [getAttachment])
@@ -111,7 +114,7 @@ const ManufacturingFundPdf = () => {
     }
     return (
         <div>
-            {imageLoading ?
+            {loading ?
                 <div className='d-flex justify-content-center align-items-center mt-3'>  <Loader /></div>
                 :
                 <div className="card ">

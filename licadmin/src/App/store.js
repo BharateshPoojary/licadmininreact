@@ -1,9 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import catReducer from "../slice/indexCatSlice.js";
-import tempreducer from "../slice/tempSlice.js";
+import loadingReducer from "@/slice/loading";
 export default configureStore({
   reducer: {
-    indexCatSlice: catReducer,
-    tempSlice: tempreducer,
+    loadingSlice: loadingReducer,
   },
 });

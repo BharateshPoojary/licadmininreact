@@ -139,7 +139,7 @@ const Template = () => {
                                     <div className="col-md-6">
                                         <div className="mb-3">
                                             <label htmlFor="Email" className="form-label" >Email:</label>
-                                            <input type="email" className="form-control bg-light" id="Email" required onChange={(e) => setEmail(e.target.value)} />
+                                            <input type="email" className="form-control bg-light" id="Email" onChange={(e) => setEmail(e.target.value)} required />
                                         </div>
                                     </div>
                                     <div className="col-md-12">
