@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useTransition } from 'react'
 import Croppie from 'croppie';
 import './croppie.css';
 import "./croppie.js";
@@ -24,6 +24,7 @@ const Template = () => {
     const [isUploadedPhoto, setIsUploadedPhoto] = useState(false);
     const mobilenovalidationmessage = useRef();
     const uploadphotomessage = useRef();
+    const [isPending, startTransition] = useTransition();
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         console.log(file);
@@ -71,48 +72,51 @@ const Template = () => {
             });
         }
     };
-    const handleFormSubmit = async (e) => {
-        // console.log("Ima submit")
-        e.preventDefault();
-        if (!isUploadedPhoto) {
-            console.log("not uploaded");
-            uploadphotomessage.current.textContent = "please upload the photo";
-            uploadphotomessage.current.style.color = "red";
-            return;
-        } else {
-            uploadphotomessage.current.textContent = "";
-        }
-        mobilenovalidationmessage.current.style.color = "red";
-        const convertedtonumData = Number(Contact_No);
-        if (isNaN(convertedtonumData)) {
-            mobilenovalidationmessage.current.textContent = "Please enter a valid number";
-            console.log("Please enter a valid number");
-            return;
-        } else if (Contact_No.length > 10 || Contact_No.length < 10) {
-            mobilenovalidationmessage.current.textContent = "Mobile number must be of  10 digit";
-            console.log("Mobile number must be of  10 digit");
-            return;
-        }
-        else {
-            mobilenovalidationmessage.current.textContent = "";
-        }
-        try {
-            const formData = new FormData();
-            formData.append('Name', Name);
-            formData.append('ARN_No', ARN_NO);
-            formData.append('Contact_No', Contact_No);
-            formData.append('tempId', tempid);
-            formData.append('Email', Email);
-            formData.append('Address', Address);
-            formData.append('Attachment', Attachment);
-            console.log(Attachment)
-            const post_response = await axios.post("http://lic.swiftmore.in/LicAdmin/insertDataapi.php", formData);
-            console.log(post_response.data);
-            const { id } = post_response.data;
-            navigate(`/manufacturingpdf/${id}/${tempname}`);
-        } catch (error) {
-            console.log(error.response?.data || error.message);
-        }
+    const handleFormSubmit = (e) => {
+        startTransition(async () => {
+
+            // console.log("Ima submit")
+            e.preventDefault();
+            if (!isUploadedPhoto) {
+                console.log("not uploaded");
+                uploadphotomessage.current.textContent = "please upload the photo";
+                uploadphotomessage.current.style.color = "red";
+                return;
+            } else {
+                uploadphotomessage.current.textContent = "";
+            }
+            mobilenovalidationmessage.current.style.color = "red";
+            const convertedtonumData = Number(Contact_No);
+            if (isNaN(convertedtonumData)) {
+                mobilenovalidationmessage.current.textContent = "Please enter a valid number";
+                console.log("Please enter a valid number");
+                return;
+            } else if (Contact_No.length > 10 || Contact_No.length < 10) {
+                mobilenovalidationmessage.current.textContent = "Mobile number must be of  10 digit";
+                console.log("Mobile number must be of  10 digit");
+                return;
+            }
+            else {
+                mobilenovalidationmessage.current.textContent = "";
+            }
+            try {
+                const formData = new FormData();
+                formData.append('Name', Name);
+                formData.append('ARN_No', ARN_NO);
+                formData.append('Contact_No', Contact_No);
+                formData.append('tempId', tempid);
+                formData.append('Email', Email);
+                formData.append('Address', Address);
+                formData.append('Attachment', Attachment);
+                console.log(Attachment)
+                const post_response = await axios.post("http://lic.swiftmore.in/LicAdmin/insertDataapi.php", formData);
+                console.log(post_response.data);
+                const { id } = post_response.data;
+                navigate(`/manufacturingpdf/${id}/${tempname}`);
+            } catch (error) {
+                console.log(error.response?.data || error.message);
+            }
+        })
     }
     return (
         <div>
@@ -133,9 +137,10 @@ const Template = () => {
                             <div className="col-md-3 text-center">
                                 <label style={{ cursor: "pointer" }} className='position-relative'>
                                     <img src={imagePreview} className="img-fluid" style={isUploadedImg ? undefined : { filter: "blur(2px)" }} id="item-img-output" />
-                                    <div className="position-absolute top-50 start-50 bottom-50 fw-bold fs-5 text-dark" style={isUploadedImg ? { display: 'none' } : { display: 'block' }}>Upload Profile</div>
+
                                     <input type="file" className="position-absolute top-50 start-50 bottom-50 " name="Attachment" id="web-img-input" onChange={handleFileChange} />
                                 </label>
+                                <div className=" fw-bold fs-5 text-dark" style={isUploadedImg ? { display: 'none' } : { display: 'block' }}>Upload Profile</div>
                                 <p ref={uploadphotomessage}></p>
                             </div>
                             <div className="col-md-9">
@@ -173,7 +178,7 @@ const Template = () => {
                                     </div>
                                     <div className="col-md-12">
                                         <div className='text-center'>
-                                            <button type="submit" className="btn btn-primary px-lg-5">Submit</button>
+                                            <button type="submit" className="btn btn-primary px-lg-5" disabled={isPending}>Submit</button>
                                         </div>
                                     </div>
                                 </div>

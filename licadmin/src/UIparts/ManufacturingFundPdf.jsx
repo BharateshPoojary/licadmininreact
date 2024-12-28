@@ -69,6 +69,7 @@ const ManufacturingFundPdf = () => {
             const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
             setBGImage(attachmentBGImage)
             dispatch(setLoading(false))
+
         }
         fetchImage();
     }, [getAttachment])
@@ -82,6 +83,7 @@ const ManufacturingFundPdf = () => {
             setGetEmail(Email);
             setGetAddress(Address);
             setGetName(Name);
+
         }
         fetchData();
     }, [id])
@@ -89,25 +91,39 @@ const ManufacturingFundPdf = () => {
         setButtonDisabled(true);
         const element = cardbody.current; // You can specify a specific element instead of the whole body.
         // Capture the content as a canvas
-        const canvas = await html2canvas(element, { useCORS: true, allowTaint: true, });
+        const canvas = await html2canvas(element, {
+            useCORS: true, allowTaint: true, scale: 2, // Increase the scale for better quality
+            width: element.offsetWidth,
+            height: element.offsetHeight,
+        });
+        // document.body.appendChild(canvas); // Appends the canvas to the DOM
+        // console.log("Original Dimensions:", element.offsetWidth, element.offsetHeight);
+        // console.log("Canvas Dimensions:", canvas.width, canvas.height);
+
+        console.log("Canvas", canvas);
+
         // Convert the canvas to an image
         const imgData = canvas.toDataURL("image/png");
         // Create a PDF document
         const pdf = new jsPDF("p", "mm", "a4");
+        const pdfWidth = 210; // A4 width in mm
+        const pdfHeight = 297; // A4 height in mm
         const imgWidth = 190; // A4 width in mm
         const imgHeight = 270;
-        const pageHeight = 297; // A4 height in mm
+        // const pageHeight = 297; // A4 height in mm
+        const xOffset = (pdfWidth - imgWidth) / 2; // Center horizontally
+        const yOffset = (pdfHeight - imgHeight) / 2; // Center vertically on the first page
         // Add the image to the PDF
-        let heightLeft = imgHeight;
-        let position = 0;
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-        while (heightLeft > 0) {
-            position -= pageHeight;
-            pdf.addPage();
-            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-        }
+        // let heightLeft = imgHeight;
+        let position = yOffset;
+        pdf.addImage(imgData, "PNG", xOffset, position, imgWidth, imgHeight);
+        // heightLeft -= pdfHeight;
+        // while (heightLeft > 0) {
+        //     position = -heightLeft + yOffset;
+        //     pdf.addPage();
+        //     pdf.addImage(imgData, "PNG", xOffset, position, imgWidth, imgHeight);
+        //     heightLeft -= pdfHeight;
+        // }
         // Download the PDF
         pdf.save("page.pdf");
         setButtonDisabled(false);
@@ -115,11 +131,20 @@ const ManufacturingFundPdf = () => {
     return (
         <div>
             {loading ?
-                <div className='d-flex justify-content-center align-items-center mt-3'>  <Loader /></div>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center", // camelCase property names
+                    alignItems: "center",
+                    marginTop: "1rem" // String for non-numeric values
+                }}>  <Loader /></div>
                 :
                 <div className="card ">
                     {buttonDisabled ?
-                        <div className='d-flex justify-content-center align-items-center'>
+                        <div style={{
+                            display: "flex",
+                            justifyContent: "center", // camelCase property names
+                            alignItems: "center",
+                        }}>
                             <Icon
                                 icon="line-md:downloading-loop"
                                 className="nav-small-cap-icon fs-1 "
@@ -167,38 +192,51 @@ const ManufacturingFundPdf = () => {
                                 </div>
                                 <hr className="border border-primary border-3 opacity-75">
                                 </hr>
-                                <div className="col-md-12">
-                                    <div className="d-flex align-items-center">
+                                <div >
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center'
+
+                                    }} className='py-2'>
                                         <Icon
                                             icon="solar:document-text-broken"
-                                            className="nav-small-cap-icon fs-4"
+                                            className="nav-small-cap-icon fs-2"
                                         ></Icon>
-                                        <p className='fs-4 bold'>{getARN_No}</p>
+                                        <p className='fs-3 bold'>{getARN_No}</p>
                                     </div>
                                 </div>
-                                <div className="col-md-12">
-                                    <div className="d-flex align-items-center">
+                                <div >
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }} className='py-2'>
                                         <Icon
                                             icon="mynaui:telephone"
-                                            className="nav-small-cap-icon fs-4"
+                                            className="nav-small-cap-icon fs-2"
                                         ></Icon>
                                         <p className='fs-4 bold'>{getContact_No}</p>
                                     </div>
                                 </div>
-                                <div className="col-md-12">
-                                    <div className="d-flex align-items-center">
+                                <div >
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }} className='py-2'>
                                         <Icon
                                             icon="basil:location-solid"
-                                            className="nav-small-cap-icon fs-4"
+                                            className="nav-small-cap-icon fs-2"
                                         ></Icon>
                                         <p className='fs-4 bold'>{getAddress}</p>
                                     </div>
                                 </div>
-                                <div className="col-md-12">
-                                    <div className="d-flex align-items-center">
+                                <div >
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }} className='py-2' >
                                         <Icon
                                             icon="ic:round-email"
-                                            className="nav-small-cap-icon fs-4"
+                                            className="nav-small-cap-icon fs-2"
                                         ></Icon>
                                         <p className='fs-5 bold'>{getEmail}</p>
                                     </div>
