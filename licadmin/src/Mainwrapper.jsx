@@ -2,15 +2,14 @@ import React from "react";
 import { useSelector } from "react-redux";
 const Mainwrapper = ({ children }) => {
     const { status } = useSelector(state => state.sidebarSlice);
-
     return (
         //body wrapper starts
         <div
-            className={`page-wrapper ${status === "show" ? "show-sidebar" : "mini-sidebar"}`}
+            className={`page-wrapper  ${status === "show" ? "show-sidebar" : status === "hide" ? "mini-sidebar" : undefined}`}
             id="main-wrapper"
             data-layout="vertical"
             data-navbarbg="skin6"
-            data-sidebartype={`${status === "show" ? "full" : "mini-sidebar"}`}
+            data-sidebartype={`${status === "show" ? "full" : status === "hide" ? "mini-sidebar" : "full"}`}
             data-sidebar-position="fixed"
             data-header-position="fixed"
 

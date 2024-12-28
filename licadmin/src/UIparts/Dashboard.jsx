@@ -10,7 +10,7 @@ const Dashboard = () => {
     const [categories, setCategories] = useState([]);
     const fetchIndexData = async () => {
         dispatch(setLoading(true));
-        setTimeout(async () => {
+        setTimeout(async () => {//Tobe removed
             try {
                 const response = await axios.get("http://lic.swiftmore.in/LicAdmin/indexapi.php");
                 const { Cat } = response.data;
@@ -21,7 +21,7 @@ const Dashboard = () => {
             } finally {
                 dispatch(setLoading(false))
             }
-        }, 2000);
+        }, 2000);//To be removed
     }
     useEffect(() => {
         fetchIndexData();

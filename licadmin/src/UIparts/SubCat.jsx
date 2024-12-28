@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react'
 import SubCatCard from './SubCatCard';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toggleSidebar } from '@/slice/sidebarslice';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '@/slice/loading';
 const SubCat = () => {
+
     const { catid, catname } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [subCategories, setSubCategories] = useState([]);
 
     const fetchSubCatData = async () => {
+        dispatch(setLoading(true))
         try {
             const response = await axios.get(`http://lic.swiftmore.in/LicAdmin/viewallapi.php?catId=${catid}`);
             console.log(response.data);
@@ -15,6 +21,8 @@ const SubCat = () => {
             setSubCategories(Details || []);
         } catch (error) {
             console.log(error.response?.data || error.message);
+        } finally {
+            dispatch(setLoading(false))
         }
     }
     useEffect(() => {
@@ -23,7 +31,7 @@ const SubCat = () => {
     const handleTemplate = (tempId, tempName, tempImg) => {
         localStorage.setItem("Image", JSON.stringify({ tempImg }));
         navigate(`/template/${tempId}/${tempName}`);
-
+        dispatch(toggleSidebar(""))
     }
     return (
         <div>
