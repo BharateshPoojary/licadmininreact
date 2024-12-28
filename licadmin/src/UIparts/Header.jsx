@@ -1,14 +1,20 @@
 import React from 'react'
 import user from "../assets/images/profile/user-1.jpg";
+import { useDispatch } from 'react-redux';
+import { toggleSidebar } from '@/slice/sidebarslice';
 const Header = () => {
+    const dispatch = useDispatch();
+    const showSidebar = () => {
+        dispatch(toggleSidebar("show"));
+    }
     return (
         <div>
             <header className="app-header" >
                 <nav className="navbar navbar-expand-lg  navbar-light ">
                     <ul className="navbar-nav  ">
                         {/* sidebaricon starts */}
-                        <li className="nav-item d-block d-xl-none">
-                            <a className="nav-link sidebartoggler " id="headerCollapse" >
+                        <li className="nav-item d-block d-xl-none cursor-pointer" onClick={showSidebar}>
+                            <a className="nav-link " id="headerCollapse" >
                                 <i className="ti ti-menu-2" ></i>
                             </a>
                         </li>

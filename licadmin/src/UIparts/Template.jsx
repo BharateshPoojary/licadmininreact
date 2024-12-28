@@ -21,6 +21,9 @@ const Template = () => {
     const [croppieInstance, setCroppieInstance] = useState(null);
     const [imagePreview, setImagePreview] = useState('http://lic.swiftmore.in/LicAdmin/images/Profile%20Photo.png');
     const [showModal, setShowModal] = useState(false);
+    const [isUploadedPhoto, setIsUploadedPhoto] = useState(false);
+    const mobilenovalidationmessage = useRef();
+    const uploadphotomessage = useRef();
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         console.log(file);
@@ -28,21 +31,22 @@ const Template = () => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = (e) => {
+                setIsUploadedPhoto(true)//user uploaded the image
                 setShowModal(true); // Show the modal
                 setImgUrl(e.target.result);
                 console.log("Data", e.target.result);
             }
+        } else {
+            setIsUploadedPhoto(false)//user not uploaded the image
         }
     };
     const base64ToFile = (base64String, fileName) => {
         const [metadata, base64Data] = base64String.split(',');
         const contentType = metadata.match(/:(.*?);/)[1]; // Extract MIME type (e.g., "image/jpeg")
-
         // Convert Base64 to binary data
         const byteCharacters = atob(base64Data);
         const byteNumbers = new Array(byteCharacters.length).fill(0).map((_, i) => byteCharacters.charCodeAt(i));
         const byteArray = new Uint8Array(byteNumbers);
-
         // Create a File object
         return new File([byteArray], fileName, { type: contentType });
     }
@@ -59,6 +63,7 @@ const Template = () => {
                 console.log("Base 64", base64Image);
                 setShowModal(false); // Close the modal
                 setIsUploadedImg(true);
+                uploadphotomessage.current.textContent = "";
                 const fileName = "cropped-image.jpg"; // Choose a suitable name
                 const file = base64ToFile(base64Image, fileName);//converting the base 64 to again file object 
                 console.log("New Cropped file", file);
@@ -67,8 +72,30 @@ const Template = () => {
         }
     };
     const handleFormSubmit = async (e) => {
-        console.log("Ima submit")
+        // console.log("Ima submit")
         e.preventDefault();
+        if (!isUploadedPhoto) {
+            console.log("not uploaded");
+            uploadphotomessage.current.textContent = "please upload the photo";
+            uploadphotomessage.current.style.color = "red";
+            return;
+        } else {
+            uploadphotomessage.current.textContent = "";
+        }
+        mobilenovalidationmessage.current.style.color = "red";
+        const convertedtonumData = Number(Contact_No);
+        if (isNaN(convertedtonumData)) {
+            mobilenovalidationmessage.current.textContent = "Please enter a valid number";
+            console.log("Please enter a valid number");
+            return;
+        } else if (Contact_No.length > 10 || Contact_No.length < 10) {
+            mobilenovalidationmessage.current.textContent = "Mobile number must be of  10 digit";
+            console.log("Mobile number must be of  10 digit");
+            return;
+        }
+        else {
+            mobilenovalidationmessage.current.textContent = "";
+        }
         try {
             const formData = new FormData();
             formData.append('Name', Name);
@@ -107,8 +134,9 @@ const Template = () => {
                                 <label style={{ cursor: "pointer" }} className='position-relative'>
                                     <img src={imagePreview} className="img-fluid" style={isUploadedImg ? undefined : { filter: "blur(2px)" }} id="item-img-output" />
                                     <div className="position-absolute top-50 start-50 bottom-50 fw-bold fs-5 text-dark" style={isUploadedImg ? { display: 'none' } : { display: 'block' }}>Upload Profile</div>
-                                    <input type="file" className="position-absolute top-50 start-50 bottom-50 " name="Attachment" id="web-img-input" onChange={handleFileChange} required />
+                                    <input type="file" className="position-absolute top-50 start-50 bottom-50 " name="Attachment" id="web-img-input" onChange={handleFileChange} />
                                 </label>
+                                <p ref={uploadphotomessage}></p>
                             </div>
                             <div className="col-md-9">
                                 <div className="row">
@@ -129,6 +157,7 @@ const Template = () => {
                                             <label htmlFor="Contact No" className="form-label" >Contact No:</label>
                                             <input type="text" className="form-control bg-light" id="Contact No" required onChange={(e) => setContact_No(e.target.value)} />
                                         </div>
+                                        <p id="mobilenovalidationmessage" ref={mobilenovalidationmessage}></p>
                                     </div>
                                     <div className="col-md-6">
                                         <div className="mb-3">
@@ -155,6 +184,7 @@ const Template = () => {
 
                         const croppieElement = croppieRef.current;
                         if (croppieElement) {
+
                             console.log("CroppieRef found:", croppieElement);
                             console.log("Image", ImgUrl);
                             const instance = new Croppie(croppieElement, {
