@@ -109,7 +109,9 @@ const ManufacturingFundPdf = () => {
         locationimageDiv.current.style.alignItems = "end";
         locationcontentDiv.current.style.alignItems = "start";
         mailimageDiv.current.style.alignItems = "end";
+        mailimageDiv.current.style.marginTop = "15px";
         mailcontentDiv.current.style.alignItems = "start"
+
         hrlineref.current.style.marginTop = "10px";
         const canvas = await html2canvas(element, {
             useCORS: true, allowTaint: true, scale: 2, // Increase the scale for better quality
@@ -123,7 +125,9 @@ const ManufacturingFundPdf = () => {
         locationimageDiv.current.style.alignItems = "center";
         locationcontentDiv.current.style.alignItems = "center";
         mailimageDiv.current.style.alignItems = "center";
+        mailimageDiv.current.style.marginTop = "0";
         mailcontentDiv.current.style.alignItems = "center";
+
         hrlineref.current.style.marginTop = "0";
         // document.body.appendChild(canvas); // Appends the canvas to the DOM
         // console.log("Original Dimensions:", element.offsetWidth, element.offsetHeight);

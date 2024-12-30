@@ -22,7 +22,7 @@ const Header = () => {
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item dropdown">
                             <a
-                                className="nav-link"
+                                className="nav-link cursor-pointer"
                                 id="drop2"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"

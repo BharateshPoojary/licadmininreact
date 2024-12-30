@@ -10,18 +10,18 @@ const Dashboard = () => {
     const [categories, setCategories] = useState([]);
     const fetchIndexData = async () => {
         dispatch(setLoading(true));
-        setTimeout(async () => {//Tobe removed
-            try {
-                const response = await axios.get("http://lic.swiftmore.in/LicAdmin/indexapi.php");
-                const { Cat } = response.data;
-                console.log(response.data);
-                setCategories(Cat || []);
-            } catch (error) {
-                console.log(error.response?.data || error.message);
-            } finally {
-                dispatch(setLoading(false))
-            }
-        }, 2000);//To be removed
+
+        try {
+            const response = await axios.get("http://lic.swiftmore.in/LicAdmin/indexapi.php");
+            const { Cat } = response.data;
+            console.log(response.data);
+            setCategories(Cat || []);
+        } catch (error) {
+            console.log(error.response?.data || error.message);
+        } finally {
+            dispatch(setLoading(false))
+        }
+
     }
     useEffect(() => {
         fetchIndexData();
