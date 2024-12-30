@@ -7,8 +7,21 @@ import jsPDF from "jspdf";
 import Loader from './Loader.jsx';
 import { setLoading } from '@/slice/loading.js';
 import { useDispatch, useSelector } from 'react-redux';
+import arnicon from "../assets/images/text-document-line-icon.png"
+import phoneicon from "../assets/images/phone-line-icon.png"
+import locationicon from "../assets/images/maps-pin-line-icon.png";
+import mailicon from "../assets/images/envelope-line-icon.png"
 const ManufacturingFundPdf = () => {
     const dispatch = useDispatch();
+    const arnimageDiv = useRef();
+    const arncontentDiv = useRef();
+    const phonecontentDiv = useRef();
+    const phoneimageDiv = useRef();
+    const locationcontentDiv = useRef();
+    const locationimageDiv = useRef();
+    const mailcontentDiv = useRef();
+    const mailimageDiv = useRef();
+    const hrlineref = useRef();
     const { loading } = useSelector(state => state.loadingSlice);
     const cardbody = useRef();
     const { id, tempname } = useParams();
@@ -69,7 +82,6 @@ const ManufacturingFundPdf = () => {
             const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
             setBGImage(attachmentBGImage)
             dispatch(setLoading(false))
-
         }
         fetchImage();
     }, [getAttachment])
@@ -83,7 +95,6 @@ const ManufacturingFundPdf = () => {
             setGetEmail(Email);
             setGetAddress(Address);
             setGetName(Name);
-
         }
         fetchData();
     }, [id])
@@ -91,16 +102,34 @@ const ManufacturingFundPdf = () => {
         setButtonDisabled(true);
         const element = cardbody.current; // You can specify a specific element instead of the whole body.
         // Capture the content as a canvas
+        arnimageDiv.current.style.alignItems = "end";
+        arncontentDiv.current.style.alignItems = "start";
+        phoneimageDiv.current.style.alignItems = "end";
+        phonecontentDiv.current.style.alignItems = "start";
+        locationimageDiv.current.style.alignItems = "end";
+        locationcontentDiv.current.style.alignItems = "start";
+        mailimageDiv.current.style.alignItems = "end";
+        mailcontentDiv.current.style.alignItems = "start"
+        hrlineref.current.style.marginTop = "10px";
         const canvas = await html2canvas(element, {
             useCORS: true, allowTaint: true, scale: 2, // Increase the scale for better quality
             width: element.offsetWidth,
             height: element.offsetHeight,
         });
+        arnimageDiv.current.style.alignItems = "center";
+        arncontentDiv.current.style.alignItems = "center";
+        phoneimageDiv.current.style.alignItems = "center";
+        phonecontentDiv.current.style.alignItems = "center";
+        locationimageDiv.current.style.alignItems = "center";
+        locationcontentDiv.current.style.alignItems = "center";
+        mailimageDiv.current.style.alignItems = "center";
+        mailcontentDiv.current.style.alignItems = "center";
+        hrlineref.current.style.marginTop = "0";
         // document.body.appendChild(canvas); // Appends the canvas to the DOM
         // console.log("Original Dimensions:", element.offsetWidth, element.offsetHeight);
         // console.log("Canvas Dimensions:", canvas.width, canvas.height);
 
-        console.log("Canvas", canvas);
+        // console.log("Canvas", canvas);
 
         // Convert the canvas to an image
         const imgData = canvas.toDataURL("image/png");
@@ -169,7 +198,6 @@ const ManufacturingFundPdf = () => {
                         <div >
                             <img width="100%" src={tempImage} alt={tempname} className="img-fluid" />
                         </div>
-
                         <div className='row mt-2 rounded bgprint' style={{
                             backgroundImage: `url(${BGImage})`,
                             backgroundSize: "cover",
@@ -190,55 +218,70 @@ const ManufacturingFundPdf = () => {
                                 <div className="col-md-12">
                                     <div className='text-center h4 text-primary'>Distributer Partner:{getName}</div>
                                 </div>
-                                <hr className="border border-primary border-3 opacity-75">
-                                </hr>
-                                <div >
+                                <div ref={hrlineref}>
+                                    <hr className="border border-primary border-3 opacity-75" >
+                                    </hr>
+                                </div>
+                                <div className='d-flex'>
                                     <div style={{
                                         display: 'flex',
                                         alignItems: 'center'
+                                    }} ref={arnimageDiv}>
+                                        <img src={arnicon} alt="ARN no" width="20px" height="20px" />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }} ref={arncontentDiv}>
+                                        <p className='fs-3 bold text-wrap text-break'>{getARN_No}</p>
+                                    </div>
+                                </div>
 
-                                    }} className='py-2'>
-                                        <Icon
-                                            icon="solar:document-text-broken"
-                                            className="nav-small-cap-icon fs-2"
-                                        ></Icon>
-                                        <p className='fs-3 bold'>{getARN_No}</p>
-                                    </div>
-                                </div>
-                                <div >
+
+                                <div className='d-flex' >
                                     <div style={{
                                         display: 'flex',
                                         alignItems: 'center'
-                                    }} className='py-2'>
-                                        <Icon
-                                            icon="mynaui:telephone"
-                                            className="nav-small-cap-icon fs-2"
-                                        ></Icon>
-                                        <p className='fs-4 bold'>{getContact_No}</p>
+                                    }} ref={phoneimageDiv}>
+                                        <img src={phoneicon} alt="phone no" width="20px" height="20px" />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }} ref={phonecontentDiv}>
+                                        <p className='fs-4 bold text-wrap text-wrap text-break'>{getContact_No}</p>
                                     </div>
                                 </div>
-                                <div >
+                                <div className='d-flex'>
                                     <div style={{
                                         display: 'flex',
                                         alignItems: 'center'
-                                    }} className='py-2'>
-                                        <Icon
-                                            icon="basil:location-solid"
-                                            className="nav-small-cap-icon fs-2"
-                                        ></Icon>
-                                        <p className='fs-4 bold'>{getAddress}</p>
+                                    }} ref={locationimageDiv} >
+                                        <img src={locationicon} alt="location" width="20px" height="20px" />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }} ref={locationcontentDiv}>
+                                        <p className='fs-4 bold text-wrap text-break'>{getAddress}</p>
                                     </div>
                                 </div>
-                                <div >
+                                <div className='d-flex'>
                                     <div style={{
                                         display: 'flex',
                                         alignItems: 'center'
-                                    }} className='py-2' >
-                                        <Icon
-                                            icon="ic:round-email"
-                                            className="nav-small-cap-icon fs-2"
-                                        ></Icon>
-                                        <p className='fs-5 bold'>{getEmail}</p>
+                                    }} ref={mailimageDiv}>
+                                        <img src={mailicon} alt="mail" width="20px" height="20px" />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }} ref={mailcontentDiv} >
+                                        <p className='fs-5 bold text-wrap text-break'>{getEmail}</p>
                                     </div>
                                 </div>
                             </div>

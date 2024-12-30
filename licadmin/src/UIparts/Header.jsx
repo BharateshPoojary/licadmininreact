@@ -45,7 +45,7 @@ const Header = () => {
                                         href='#'
                                         className="btn btn-outline-primary mx-3 mt-2 d-block"
                                     >
-                                        Logout
+                                        Login
                                     </a>
                                 </div>
                             </div>
