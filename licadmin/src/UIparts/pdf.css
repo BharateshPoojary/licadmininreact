@@ -1,0 +1,8 @@
+.email-text {
+  font-size: 27px;
+}
+@media (max-width: 766px) {
+  .email-text {
+    font-size: 15px;
+  }
+}

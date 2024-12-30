@@ -5,7 +5,7 @@ const InitialLoader = () => {
     return (
         <>
             <div className="row">
-                <div className="col-md-4 my-2">
+                <div className="col-lg-4 col-sm-6 my-2">
                     <div className="flex flex-col space-y-3">
                         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
                         <div className="space-y-2">
@@ -14,7 +14,7 @@ const InitialLoader = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-4 my-2">
+                <div className="col-lg-4 col-sm-6 my-2">
                     <div className="flex flex-col space-y-3">
                         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
                         <div className="space-y-2">
@@ -23,7 +23,7 @@ const InitialLoader = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-4 my-2">
+                <div className="col-lg-4 col-sm-6 my-2">
                     <div className="flex flex-col space-y-3">
                         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
                         <div className="space-y-2">
@@ -32,7 +32,7 @@ const InitialLoader = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-4 my-2">
+                <div className="col-lg-4 col-sm-6 my-2">
                     <div className="flex flex-col space-y-3">
                         <Skeleton className="h-[125px] w-[250px] rounded-xl" />
                         <div className="space-y-2">

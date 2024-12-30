@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Loader from './Loader.jsx';
+import "./pdf.css"
 import { setLoading } from '@/slice/loading.js';
 import { useDispatch, useSelector } from 'react-redux';
 import arnicon from "../assets/images/text-document-line-icon.png"
@@ -16,12 +17,15 @@ const ManufacturingFundPdf = () => {
     const arnimageDiv = useRef();
     const arncontentDiv = useRef();
     const phonecontentDiv = useRef();
+    const distributorInfo = useRef();
+    const contactInfo = useRef();
     const phoneimageDiv = useRef();
     const locationcontentDiv = useRef();
     const locationimageDiv = useRef();
     const mailcontentDiv = useRef();
     const mailimageDiv = useRef();
     const hrlineref = useRef();
+    const attachmentImageRef = useRef();
     const { loading } = useSelector(state => state.loadingSlice);
     const cardbody = useRef();
     const { id, tempname } = useParams();
@@ -104,15 +108,26 @@ const ManufacturingFundPdf = () => {
         // Capture the content as a canvas
         arnimageDiv.current.style.alignItems = "end";
         arncontentDiv.current.style.alignItems = "start";
+        arncontentDiv.current.style.letterSpacing = "3px";
+
         phoneimageDiv.current.style.alignItems = "end";
         phonecontentDiv.current.style.alignItems = "start";
+        phonecontentDiv.current.style.letterSpacing = "3px";
+
         locationimageDiv.current.style.alignItems = "end";
         locationcontentDiv.current.style.alignItems = "start";
+        locationcontentDiv.current.style.letterSpacing = "3px";
+
         mailimageDiv.current.style.alignItems = "end";
-        mailimageDiv.current.style.marginTop = "15px";
+
         mailcontentDiv.current.style.alignItems = "start"
 
+
+        distributorInfo.current.style.letterSpacing = "5px";
+        contactInfo.current.style.letterSpacing = "5px";
         hrlineref.current.style.marginTop = "10px";
+        attachmentImageRef.current.style.width = "230px";
+        attachmentImageRef.current.style.height = "230px";
         const canvas = await html2canvas(element, {
             useCORS: true, allowTaint: true, scale: 2, // Increase the scale for better quality
             width: element.offsetWidth,
@@ -120,15 +135,26 @@ const ManufacturingFundPdf = () => {
         });
         arnimageDiv.current.style.alignItems = "center";
         arncontentDiv.current.style.alignItems = "center";
+        arncontentDiv.current.style.letterSpacing = "0";
+
         phoneimageDiv.current.style.alignItems = "center";
         phonecontentDiv.current.style.alignItems = "center";
+        phonecontentDiv.current.style.letterSpacing = "0";
+
         locationimageDiv.current.style.alignItems = "center";
         locationcontentDiv.current.style.alignItems = "center";
+        locationcontentDiv.current.style.letterSpacing = "0";
+
         mailimageDiv.current.style.alignItems = "center";
         mailimageDiv.current.style.marginTop = "0";
         mailcontentDiv.current.style.alignItems = "center";
 
+
+        distributorInfo.current.style.letterSpacing = "0";
+        contactInfo.current.style.letterSpacing = "0";
         hrlineref.current.style.marginTop = "0";
+        attachmentImageRef.current.style.width = "200px";
+        attachmentImageRef.current.style.height = "200px";
         // document.body.appendChild(canvas); // Appends the canvas to the DOM
         // console.log("Original Dimensions:", element.offsetWidth, element.offsetHeight);
         // console.log("Canvas Dimensions:", canvas.width, canvas.height);
@@ -141,7 +167,7 @@ const ManufacturingFundPdf = () => {
         const pdf = new jsPDF("p", "mm", "a4");
         const pdfWidth = 210; // A4 width in mm
         const pdfHeight = 297; // A4 height in mm
-        const imgWidth = 190; // A4 width in mm
+        const imgWidth = 200; // A4 width in mm
         const imgHeight = 270;
         // const pageHeight = 297; // A4 height in mm
         const xOffset = (pdfWidth - imgWidth) / 2; // Center horizontally
@@ -211,16 +237,16 @@ const ManufacturingFundPdf = () => {
                         }} >
                             <div className="col-md-3">
                                 <div className='d-flex align-items-center justify-content-center'>
-                                    <img className="img-fluid" src={attachmentImage} alt="image" />
+                                    <img className="img-fluid" src={attachmentImage} alt="image" ref={attachmentImageRef} />
                                 </div>
                             </div>
                             <div className="col-md-9">
                                 <div className="col-md-12" >
-                                    <div className='text-center h4'>To Know More Please Contact</div>
+                                    <div className='text-center h4' ref={contactInfo}>To Know More Please Contact</div>
 
                                 </div>
                                 <div className="col-md-12">
-                                    <div className='text-center h4 text-primary'>Distributer Partner:{getName}</div>
+                                    <div className='text-center h4 text-primary' ref={distributorInfo}>Distributer Partner:{getName}</div>
                                 </div>
                                 <div ref={hrlineref}>
                                     <hr className="border border-primary border-3 opacity-75" >
@@ -236,7 +262,8 @@ const ManufacturingFundPdf = () => {
                                     <div
                                         style={{
                                             display: 'flex',
-                                            alignItems: 'center'
+                                            alignItems: 'center',
+                                            marginLeft: "5px"
                                         }} ref={arncontentDiv}>
                                         <p className='fs-3 bold text-wrap text-break'>{getARN_No}</p>
                                     </div>
@@ -253,7 +280,8 @@ const ManufacturingFundPdf = () => {
                                     <div
                                         style={{
                                             display: 'flex',
-                                            alignItems: 'center'
+                                            alignItems: 'center',
+                                            marginLeft: "5px"
                                         }} ref={phonecontentDiv}>
                                         <p className='fs-4 bold text-wrap text-wrap text-break'>{getContact_No}</p>
                                     </div>
@@ -268,7 +296,8 @@ const ManufacturingFundPdf = () => {
                                     <div
                                         style={{
                                             display: 'flex',
-                                            alignItems: 'center'
+                                            alignItems: 'center',
+                                            marginLeft: "5px"
                                         }} ref={locationcontentDiv}>
                                         <p className='fs-4 bold text-wrap text-break'>{getAddress}</p>
                                     </div>
@@ -283,9 +312,10 @@ const ManufacturingFundPdf = () => {
                                     <div
                                         style={{
                                             display: 'flex',
-                                            alignItems: 'center'
+                                            alignItems: 'center',
+                                            marginLeft: "5px"
                                         }} ref={mailcontentDiv} >
-                                        <p className='fs-5 bold text-wrap text-break'>{getEmail}</p>
+                                        <p className='bold email-text text-wrap text-break'>{getEmail}</p>
                                     </div>
                                 </div>
                             </div>
