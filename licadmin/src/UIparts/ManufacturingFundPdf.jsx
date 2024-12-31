@@ -36,7 +36,6 @@ const ManufacturingFundPdf = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [getContact_No, setContact_No] = useState('');
     const [getARN_No, setARN_NO] = useState('');
-    const [getAttachment, setAttachment] = useState('http://lic.swiftmore.in/LicAdmin/images/Profile%20Photo.png');
     const [BGImage, setBGImage] = useState('');
     const [tempImage, setTempImage] = useState('');
     const [attachmentImage, setAttachmentImage] = useState('');
@@ -75,30 +74,68 @@ const ManufacturingFundPdf = () => {
             reader.readAsDataURL(blob)//It will trigger the onload end event if the blob is converted to base64 else error will be onerror will be triggered
         })
     }
-    useEffect(() => {
-        const fetchImage = async () => {
-            dispatch(setLoading(true))
-            const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
-            const attachmentImage = await convertImageToBase64(corsissueresolveurl + getAttachment);
-            setAttachmentImage(attachmentImage);
-            const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
-            setTempImage(tempImage)
-            const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
-            setBGImage(attachmentBGImage)
-            dispatch(setLoading(false))
-        }
-        fetchImage();
-    }, [getAttachment])
 
+    // const fetchImage = async (profileImgurl) => {
+    //     dispatch(setLoading(true))
+    //     const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
+    //     const attachmentImg = await convertImageToBase64(corsissueresolveurl + profileImgurl);
+    //     console.log("profile Image Url", profileImgurl);
+
+    //     setAttachmentImage(attachmentImg);
+    //     const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
+    //     console.log("TempImage", tempImage);
+    //     setTempImage(tempImage)
+    //     const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
+    //     setBGImage(attachmentBGImage)
+    //     dispatch(setLoading(false))
+    // }
+    const proxyFunction = async (proxyurl) => {
+        try {
+            const proxy_response = await axios.get(proxyurl);
+            return proxy_response.data;
+        } catch (error) {
+            console.log(error.response?.data || error.message);
+        }
+    }
+    const fetchImage = async (Attachment) => {
+        dispatch(setLoading(true))
+        // const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
+        // const attachmentImg = await convertImageToBase64(corsissueresolveurl + profileImgurl);
+        // console.log("profile Image Url", profileImgurl);
+
+        // setAttachmentImage(attachmentImg);
+        // const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
+        // console.log("TempImage", tempImage);
+        // setTempImage(tempImage)
+        // const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
+        // setBGImage(attachmentBGImage)
+
+        const profileImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${Attachment}`);
+        console.log("Content", profileImage.Content + "Mime Type", profileImage.MimeType);
+        setAttachmentImage(`data:${profileImage.MimeType};base64,${profileImage.Content}`);
+        const templateImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${tempImg}`);
+        setTempImage(`data:${templateImage.MimeType};base64,${templateImage.Content}`);
+        const BGImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
+        setTempImage(`data:${BGImage.MimeType};base64,${BGImage.Content}`);
+        dispatch(setLoading(false))
+    }
     useEffect(() => {
         const fetchData = async () => {
-            const { Name, Address, Email, Contact_No, ARN_No, Attachment } = await getUserData(id);
-            setAttachment(`http://lic.swiftmore.in/LicAdmin/${Attachment}`);
-            setARN_NO(ARN_No);
-            setContact_No(Contact_No);
-            setGetEmail(Email);
-            setGetAddress(Address);
-            setGetName(Name);
+            try {
+                const { Name, Address, Email, Contact_No, ARN_No, Attachment } = await getUserData(id);
+                // const profileImgurl = `http://lic.swiftmore.in/LicAdmin/${Attachment}`;
+                setARN_NO(ARN_No);
+                setContact_No(Contact_No);
+                setGetEmail(Email);
+                setGetAddress(Address);
+                setGetName(Name);
+                // fetchImage(profileImgurl);
+                fetchImage(Attachment);
+
+            } catch (error) {
+                console.log(error.response?.data || error.message);
+            }
+
         }
         fetchData();
     }, [id])
@@ -321,6 +358,7 @@ const ManufacturingFundPdf = () => {
                             </div>
                         </div>
                     </div>
+
                 </div>}
         </div>
     )
