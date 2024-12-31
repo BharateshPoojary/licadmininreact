@@ -116,7 +116,7 @@ const ManufacturingFundPdf = () => {
         const templateImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${tempImg}`);
         setTempImage(`data:${templateImage.MimeType};base64,${templateImage.Content}`);
         const BGImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
-        setTempImage(`data:${BGImage.MimeType};base64,${BGImage.Content}`);
+        setBGImage(`data:${BGImage.MimeType};base64,${BGImage.Content}`);
         dispatch(setLoading(false))
     }
     useEffect(() => {
