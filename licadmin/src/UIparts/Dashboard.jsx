@@ -11,6 +11,7 @@ const Dashboard = () => {
     const fetchIndexData = async () => {
         dispatch(setLoading(true));
 
+
         try {
             const response = await axios.get("http://lic.swiftmore.in/LicAdmin/indexapi.php");
             const { Cat } = response.data;
@@ -30,12 +31,13 @@ const Dashboard = () => {
         <div>
             <div className="body-wrapper-inner overflow-hidden" >
                 <div className="container-fluid">
-                    <div className="row gx-5" >
+
+                    <div className="row row-cols-1 row-cols-md-3 g-3" >
                         {
                             categories.length > 0 ?
                                 categories.map((category) =>
                                 (
-                                    <div className='col-md-6 col-lg-3 mb-3' key={category.catId}>
+                                    <div className='col ' key={category.catId}>
                                         <Dashboardcard
                                             catId={category.catId}
                                             catName={category.catName}

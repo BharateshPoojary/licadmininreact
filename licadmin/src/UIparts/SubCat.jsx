@@ -43,25 +43,22 @@ const SubCat = () => {
                             <div className=" row row-cols-1 row-cols-md-3 g-3">
                                 {subCategories.length > 0 ?
                                     subCategories.map((subcat) => (
-                                        <div className="col" key={subcat.tempId} style={{ cursor: "pointer", }} onClick={() => handleTemplate(subcat.tempId, subcat.tempName, subcat.tempImg)}>
+                                        <div className='col'
+                                            key={subcat.tempId} style={{ cursor: "pointer", }} onClick={() => handleTemplate(subcat.tempId, subcat.tempName, subcat.tempImg)}>
                                             <SubCatCard
                                                 tempId={subcat.tempId}
                                                 tempName={subcat.tempName}
                                                 tempImg={`http://lic.swiftmore.in/LicAdmin/${subcat.tempImg}`}
                                             />
-
                                         </div>
-
                                     )) :
                                     (<SubCatCard emptysubcatmessage={`No ${catname} templates added `} />)}
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     )
 }
 
