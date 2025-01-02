@@ -156,15 +156,16 @@ const ManufacturingFundPdf = () => {
         locationcontentDiv.current.style.letterSpacing = "3px";
 
         mailimageDiv.current.style.alignItems = "end";
-
         mailcontentDiv.current.style.alignItems = "start"
+        mailimageDiv.current.style.marginTop = "10px";
+
+        // distributorInfo.current.style.letterSpacing = "3px";
+        // contactInfo.current.style.letterSpacing = "3px";
 
 
-        distributorInfo.current.style.letterSpacing = "5px";
-        contactInfo.current.style.letterSpacing = "5px";
-        hrlineref.current.style.marginTop = "10px";
-        attachmentImageRef.current.style.width = "230px";
+        attachmentImageRef.current.style.width = "200px";
         attachmentImageRef.current.style.height = "230px";
+
         const canvas = await html2canvas(element, {
             useCORS: true, allowTaint: true, scale: 2, // Increase the scale for better quality
             width: element.offsetWidth,
@@ -189,8 +190,8 @@ const ManufacturingFundPdf = () => {
 
         distributorInfo.current.style.letterSpacing = "0";
         contactInfo.current.style.letterSpacing = "0";
-        hrlineref.current.style.marginTop = "0";
-        attachmentImageRef.current.style.width = "200px";
+
+        // attachmentImageRef.current.style.width = "200px";
         attachmentImageRef.current.style.height = "200px";
         // document.body.appendChild(canvas); // Appends the canvas to the DOM
         // console.log("Original Dimensions:", element.offsetWidth, element.offsetHeight);
