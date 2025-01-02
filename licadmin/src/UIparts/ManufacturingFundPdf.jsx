@@ -51,9 +51,10 @@ const ManufacturingFundPdf = () => {
     }
 
     const convertImageToBase64 = async (url) => {
+        //converting image to base 64 to overcome cors error for which we have to first convert the img url to blob and then base 64 which we can use ang image src 
         try {
             const ImageUrlResponse = await axios.get(url, { responseType: "blob" });
-            // console.log(ImageUrlResponse.data);
+            console.log(ImageUrlResponse.data);//getting a blob response 
             const base64url = await convertblobToBase64(ImageUrlResponse.data);
             // console.log("URL CONVERTED TO BLOB", base64url);
             return base64url;
@@ -63,7 +64,7 @@ const ManufacturingFundPdf = () => {
     }
 
     const convertblobToBase64 = (blob) => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {//creating a new promise and it includes two parameter reolve and reject
             const reader = new FileReader();
             reader.onloadend = () => {
                 resolve(reader.result)
@@ -77,18 +78,23 @@ const ManufacturingFundPdf = () => {
 
     // const fetchImage = async (profileImgurl) => {
     //     dispatch(setLoading(true))
-    //     const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
-    //     const attachmentImg = await convertImageToBase64(corsissueresolveurl + profileImgurl);
-    //     console.log("profile Image Url", profileImgurl);
+    const fetchblobimage = async () => {
+        const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
+        // const attachmentImg = await convertImageToBase64(corsissueresolveurl + profileImgurl);
+        // console.log("profile Image Url", profileImgurl);
 
-    //     setAttachmentImage(attachmentImg);
-    //     const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
-    //     console.log("TempImage", tempImage);
-    //     setTempImage(tempImage)
-    //     const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
-    //     setBGImage(attachmentBGImage)
-    //     dispatch(setLoading(false))
-    // }
+        // setAttachmentImage(attachmentImg);
+        // const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
+        // console.log("TempImage", tempImage);
+        // setTempImage(tempImage)
+        const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
+        console.log("Attachment BG Imgae", attachmentBGImage);
+        // setBGImage(attachmentBGImage)
+        // dispatch(setLoading(false))
+    }
+    useEffect(() => {
+        fetchblobimage();
+    }, [])
     const proxyFunction = async (proxyurl) => {
         try {
             const proxy_response = await axios.get(proxyurl);
