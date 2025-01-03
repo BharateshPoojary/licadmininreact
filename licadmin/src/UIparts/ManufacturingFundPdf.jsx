@@ -3,37 +3,24 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import { saveAs } from 'file-saver';
 import Loader from './Loader.jsx';
 import { setLoading } from '@/slice/loading.js';
 import { useDispatch, useSelector } from 'react-redux';
 import "./content.css"
 const ManufacturingFundPdf = () => {
+
     const dispatch = useDispatch();
-    const arnimageDiv = useRef();
-    const arncontentDiv = useRef();
-    const phonecontentDiv = useRef();
-    const distributorInfo = useRef();
-    const contactInfo = useRef();
-    const phoneimageDiv = useRef();
-    const locationcontentDiv = useRef();
-    const locationimageDiv = useRef();
-    const mailcontentDiv = useRef();
-    const mailimageDiv = useRef();
-    const hrlineref = useRef();
-    const attachmentImageRef = useRef();
+    const Image = useRef();
     const { loading } = useSelector(state => state.loadingSlice);
-    const cardbody = useRef();
     const { userId } = useParams();
     const { tempImg } = JSON.parse(localStorage.getItem("Image"));
     const [getName, setGetName] = useState('');
-
     const [isHovered, setIsHovered] = useState(false);
-
     const [getRole, setRole] = useState('');
     const [tempImage, setTempImage] = useState('');
-
     const [buttonDisabled, setButtonDisabled] = useState(false);
+
     const getUserData = async (userId) => {
         try {
             const getresponse = await axios.get(`http://lic.swiftmore.in/LicAdmin/ManufacturingFundPdfApi.php?Id=${userId}`);
@@ -43,7 +30,6 @@ const ManufacturingFundPdf = () => {
         }
     }
 
-
     const proxyFunction = async (proxyurl) => {
         try {
             const proxy_response = await axios.get(proxyurl);
@@ -52,12 +38,14 @@ const ManufacturingFundPdf = () => {
             console.log(error.response?.data || error.message);
         }
     }
+
     const fetchImage = async () => {
         dispatch(setLoading(true))
         const templateImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${tempImg}`);
         setTempImage(`data:${templateImage.MimeType};base64,${templateImage.Content}`);
         dispatch(setLoading(false))
     }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -71,79 +59,20 @@ const ManufacturingFundPdf = () => {
         }
         fetchData();
     }, [userId])
+
     const DownloadPDF = async () => {
         setButtonDisabled(true);
-        const element = cardbody.current;
-
-        arnimageDiv.current.style.alignItems = "end";
-        arncontentDiv.current.style.alignItems = "start";
-        arncontentDiv.current.style.letterSpacing = "3px";
-
-        phoneimageDiv.current.style.alignItems = "end";
-        phonecontentDiv.current.style.alignItems = "start";
-        phonecontentDiv.current.style.letterSpacing = "3px";
-
-        locationimageDiv.current.style.alignItems = "end";
-        locationcontentDiv.current.style.alignItems = "start";
-        locationcontentDiv.current.style.letterSpacing = "3px";
-
-        mailimageDiv.current.style.alignItems = "end";
-        mailcontentDiv.current.style.alignItems = "start"
-        mailimageDiv.current.style.marginTop = "10px";
-
-
-
-
-        attachmentImageRef.current.style.width = "200px";
-        attachmentImageRef.current.style.height = "230px";
-
-        const canvas = await html2canvas(element, {
+        const img = Image.current;
+        const canvas = await html2canvas(img, {
             useCORS: true, allowTaint: true, scale: 2,
-            width: element.offsetWidth,
-            height: element.offsetHeight,
+            width: img.offsetWidth,
+            height: img.offsetHeight,
         });
-        arnimageDiv.current.style.alignItems = "center";
-        arncontentDiv.current.style.alignItems = "center";
-        arncontentDiv.current.style.letterSpacing = "0";
 
-        phoneimageDiv.current.style.alignItems = "center";
-        phonecontentDiv.current.style.alignItems = "center";
-        phonecontentDiv.current.style.letterSpacing = "0";
-
-        locationimageDiv.current.style.alignItems = "center";
-        locationcontentDiv.current.style.alignItems = "center";
-        locationcontentDiv.current.style.letterSpacing = "0";
-
-        mailimageDiv.current.style.alignItems = "center";
-        mailimageDiv.current.style.marginTop = "0";
-        mailcontentDiv.current.style.alignItems = "center";
-
-
-        distributorInfo.current.style.letterSpacing = "0";
-        contactInfo.current.style.letterSpacing = "0";
-
-
-        attachmentImageRef.current.style.height = "200px";
-
-
-        const imgData = canvas.toDataURL("image/png");
-
-        const pdf = new jsPDF("p", "mm", "a4");
-
-        const pdfWidth = 210;
-        const pdfHeight = 297;
-
-        const imgWidth = 200;
-        const imgHeight = 270;
-
-        const xOffset = (pdfWidth - imgWidth) / 2;
-        const yOffset = (pdfHeight - imgHeight) / 2;
-
-
-        pdf.addImage(imgData, "PNG", xOffset, yOffset, imgWidth, imgHeight);
-
-        pdf.save("page.pdf");
-        setButtonDisabled(false);
+        canvas.toBlob((blob) => {
+            saveAs(blob, "image.png"); // Use file-saver to save the blob as an image
+            setButtonDisabled(false);
+        }, "image/png");
     }
     return (
         <div className='container-fluid' >
@@ -175,38 +104,40 @@ const ManufacturingFundPdf = () => {
                             onMouseEnter={() => setIsHovered(true)}
                             onMouseLeave={() => setIsHovered(false)}
                             onClick={DownloadPDF} >
-                            <p className='fs-5'>Download PDF</p>
+                            <p className='fs-5'>Download Image</p>
                             <Icon
                                 icon="material-symbols:download"
                                 className="nav-small-cap-icon fs-1 rounded-circle no-print "
 
                             ></Icon>
                         </div>}
-                    <div style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: 'auto' }}>
-                        <img src={tempImage}
-                            alt="Background"
-                            style={{ width: '100%', height: 'auto' }} />
-                        <div className=' content'
-                            style={{
-                                position: 'absolute',
-                                top: '73%', // Adjust to position over the red-bordered content
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                textAlign: 'center',
-                                paddingLeft: '26px',
-                                paddingRight: "26px",
-                                zIndex: 2,
-                                whiteSpace: 'nowrap', // Prevents text wrapping,
-                                background: "linear-gradient(#FDF5D6,#F9E79E)"
-                            }} >
-                            <div>
-                                <div className='text-center ' ref={contactInfo}>With Warm regards,</div>
-                            </div>
-                            <div >
-                                <div className='text-center  text-primary' ref={distributorInfo}>{getName},</div>
-                            </div>
-                            <div className='d-flex align-items-center justify-content-center' ref={arncontentDiv}>
-                                <p className=' bold '>{getRole}</p>
+                    <div ref={Image}>
+                        <div style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: 'auto' }}>
+                            <img src={tempImage}
+                                alt="Background"
+                                style={{ width: '100%', height: 'auto' }} />
+                            <div className=' content'
+                                style={{
+                                    position: 'absolute',
+                                    top: '73%', // Adjust to position over the red-bordered content
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    textAlign: 'center',
+                                    paddingLeft: '26px',
+                                    paddingRight: "26px",
+                                    zIndex: 2,
+                                    whiteSpace: 'nowrap', // Prevents text wrapping,
+                                    background: "linear-gradient(#FDF5D6,#F9E79E)"
+                                }} >
+                                <div>
+                                    <div className='text-center ' >With Warm regards,</div>
+                                </div>
+                                <div >
+                                    <div className='text-center  text-primary' >{getName},</div>
+                                </div>
+                                <div className='d-flex align-items-center justify-content-center' >
+                                    <p className=' bold '>{getRole}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
