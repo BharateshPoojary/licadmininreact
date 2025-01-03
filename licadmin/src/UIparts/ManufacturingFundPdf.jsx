@@ -5,13 +5,9 @@ import { useParams } from 'react-router-dom'
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Loader from './Loader.jsx';
-import "./pdf.css"
 import { setLoading } from '@/slice/loading.js';
 import { useDispatch, useSelector } from 'react-redux';
 import arnicon from "../assets/images/text-document-line-icon.png"
-import phoneicon from "../assets/images/phone-line-icon.png"
-import locationicon from "../assets/images/maps-pin-line-icon.png";
-import mailicon from "../assets/images/envelope-line-icon.png"
 const ManufacturingFundPdf = () => {
     const dispatch = useDispatch();
     const arnimageDiv = useRef();
@@ -28,79 +24,27 @@ const ManufacturingFundPdf = () => {
     const attachmentImageRef = useRef();
     const { loading } = useSelector(state => state.loadingSlice);
     const cardbody = useRef();
-    const { id, tempname } = useParams();
+    const { userId } = useParams();
     const { tempImg } = JSON.parse(localStorage.getItem("Image"));
     const [getName, setGetName] = useState('');
-    const [getAddress, setGetAddress] = useState('');
-    const [getEmail, setGetEmail] = useState('');
+
     const [isHovered, setIsHovered] = useState(false);
-    const [getContact_No, setContact_No] = useState('');
-    const [getARN_No, setARN_NO] = useState('');
-    const [BGImage, setBGImage] = useState('');
+
+    const [getRole, setRole] = useState('');
     const [tempImage, setTempImage] = useState('');
-    const [attachmentImage, setAttachmentImage] = useState('');
+
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    const getUserData = async (id) => {
+    const getUserData = async (userId) => {
         try {
-            const getresponse = await axios.get(`http://lic.swiftmore.in/LicAdmin/ManufacturingFundPdfApi.php?Id=${id}`);
-            // console.log(getresponse.data);
+            const getresponse = await axios.get(`http://lic.swiftmore.in/LicAdmin/ManufacturingFundPdfApi.php?Id=${userId}`);
             return getresponse.data;
         } catch (error) {
             console.log(error.response?.data || error.message);
         }
     }
 
-    // const convertImageToBase64 = async (url) => {
-    //     //converting image to base 64 to overcome cors error for which we have to first convert the img url to blob and then base 64 which we can use ang image src 
-    //     try {
-    //         const ImageUrlResponse = await axios.get(url, { responseType: "blob" });
-    //         console.log(ImageUrlResponse.data);//getting a blob response 
-    //         const base64url = await convertblobToBase64(ImageUrlResponse.data);
-    //         // console.log("URL CONVERTED TO BLOB", base64url);
-    //         return base64url;
-    //     } catch (error) {
-    //         console.log(error.response?.data || error.message);
-    //     }
-    // }
 
-    // const convertblobToBase64 = (blob) => {
-    //     return new Promise((resolve, reject) => {//creating a new promise and it includes two parameter reolve and reject
-    //         const reader = new FileReader();
-    //         reader.readAsDataURL(blob)//It will trigger the onload end event if the blob is converted to base64 else error will be thrown onerror will be triggered
-    //         reader.onloadend = () => {
-    //             resolve(reader.result)//result include the base64 url for the blob which we can use to display the image 
-    //         }
-    //         reader.onerror = (error) => {
-    //             reject(error)
-    //         }
-    //     })
-    // }
-
-    // // const fetchImage = async (profileImgurl) => {
-    // //     dispatch(setLoading(true))
-    // const fetchblobimage = async () => {
-    //     const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
-    //     // const attachmentImg = await convertImageToBase64(corsissueresolveurl + profileImgurl);
-    //     // console.log("profile Image Url", profileImgurl);
-
-    //     // setAttachmentImage(attachmentImg);
-    //     // const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
-    //     // console.log("TempImage", tempImage);
-    //     // setTempImage(tempImage)
-    //     const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
-    //     console.log("Attachment BG Imgae", attachmentBGImage);
-    //     // setBGImage(attachmentBGImage)
-    //     // dispatch(setLoading(false))
-    // }
-    // useEffect(() => {
-    //     fetchblobimage();
-    // }, [])
-    const proxyFunction = async (proxyurl) => {//proxy servers are intermediary servers between the client and actual server we are intended to send request 
-        //but because of security reasons like cors we are not able to send direct request like here we are accessing the image but beacause of cors we cannot 
-        //access those image and also we cannot resolve cors issue of image as we cannot set the specific headers like we do in normal php script 
-        //so proxy.php is an intermediary which includes speicifc headers that resolve cors so from proxy.php we are accessing the specific images
-        //as from server to server of same origin there is no cors issue so we can easily access the image and returning
-        //the base64 content and mime type  as response to client from proxy. 
+    const proxyFunction = async (proxyurl) => {
         try {
             const proxy_response = await axios.get(proxyurl);
             return proxy_response.data;
@@ -108,52 +52,29 @@ const ManufacturingFundPdf = () => {
             console.log(error.response?.data || error.message);
         }
     }
-    const fetchImage = async (Attachment) => {
+    const fetchImage = async () => {
         dispatch(setLoading(true))
-        // const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
-        // const attachmentImg = await convertImageToBase64(corsissueresolveurl + profileImgurl);
-        // console.log("profile Image Url", profileImgurl);
-
-        // setAttachmentImage(attachmentImg);
-        // const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
-        // console.log("TempImage", tempImage);
-        // setTempImage(tempImage)
-        // const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
-        // setBGImage(attachmentBGImage)
-
-        const profileImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${Attachment}`);
-        console.log("Content", profileImage.Content + "Mime Type", profileImage.MimeType);
-        setAttachmentImage(`data:${profileImage.MimeType};base64,${profileImage.Content}`);
         const templateImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${tempImg}`);
         setTempImage(`data:${templateImage.MimeType};base64,${templateImage.Content}`);
-        const BGImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
-        setBGImage(`data:${BGImage.MimeType};base64,${BGImage.Content}`);
         dispatch(setLoading(false))
     }
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { Name, Address, Email, Contact_No, ARN_No, Attachment } = await getUserData(id);
-                // const profileImgurl = `http://lic.swiftmore.in/LicAdmin/${Attachment}`;
-                setARN_NO(ARN_No);
-                setContact_No(Contact_No);
-                setGetEmail(Email);
-                setGetAddress(Address);
+                const { Name, Role } = await getUserData(userId);
                 setGetName(Name);
-                // fetchImage(profileImgurl);
-                fetchImage(Attachment);
-
+                setRole(Role);
+                fetchImage();
             } catch (error) {
                 console.log(error.response?.data || error.message);
             }
-
         }
         fetchData();
-    }, [id])
+    }, [userId])
     const DownloadPDF = async () => {
         setButtonDisabled(true);
-        const element = cardbody.current; // You can specify a specific element instead of the whole body.
-        // we are capturing this particular element as canvas instead of whole body 
+        const element = cardbody.current;
+
         arnimageDiv.current.style.alignItems = "end";
         arncontentDiv.current.style.alignItems = "start";
         arncontentDiv.current.style.letterSpacing = "3px";
@@ -170,22 +91,17 @@ const ManufacturingFundPdf = () => {
         mailcontentDiv.current.style.alignItems = "start"
         mailimageDiv.current.style.marginTop = "10px";
 
-        // distributorInfo.current.style.letterSpacing = "3px";
-        // contactInfo.current.style.letterSpacing = "3px";
+
 
 
         attachmentImageRef.current.style.width = "200px";
         attachmentImageRef.current.style.height = "230px";
 
         const canvas = await html2canvas(element, {
-            useCORS: true, allowTaint: true, scale: 2, // Increase the scale for better quality
+            useCORS: true, allowTaint: true, scale: 2,
             width: element.offsetWidth,
             height: element.offsetHeight,
-        });//converting html to canvas  
-        //also specifying  the height and width of image by conidering the  offset  height and width of element
-        //offset means it considers content+padding +border width and height in px of the particular htmlelement    
-        //e.g.offsetWidth = 100px (content) + 20px (padding) + 10px (border) = 130px
-
+        });
         arnimageDiv.current.style.alignItems = "center";
         arncontentDiv.current.style.alignItems = "center";
         arncontentDiv.current.style.letterSpacing = "0";
@@ -206,67 +122,44 @@ const ManufacturingFundPdf = () => {
         distributorInfo.current.style.letterSpacing = "0";
         contactInfo.current.style.letterSpacing = "0";
 
-        // attachmentImageRef.current.style.width = "200px";
+
         attachmentImageRef.current.style.height = "200px";
-        // document.body.appendChild(canvas); // Appends the canvas to the DOM
-        // console.log("Original Dimensions:", element.offsetWidth, element.offsetHeight);
-        // console.log("Canvas Dimensions:", canvas.width, canvas.height);
 
-        // console.log("Canvas", canvas);
 
-        // Convert the canvas to an image
         const imgData = canvas.toDataURL("image/png");
-        //This converts the content of the canvas element into a Base64-encoded string representing the image in PNG format. This imgData will be used later to embed the image in the PDF.
-        // Create a PDF document
+
         const pdf = new jsPDF("p", "mm", "a4");
-        //         new jsPDF("p", "mm", "a4") creates a new PDF document:
-        // "p": Portrait orientation.
-        // "mm": Unit of measurement in millimeters.
-        // "a4": Paper size of A4.
-        const pdfWidth = 210; // A4 width in mm
-        const pdfHeight = 297; // A4 height in mm
-        // Dimensions of an A4 page in millimeters.
+
+        const pdfWidth = 210;
+        const pdfHeight = 297;
+
         const imgWidth = 200;
         const imgHeight = 270;
-        //Dimensions of the image that will be embedded in the PDF.
-        // const pageHeight = 297; // A4 height in mm
-        //POSITION OF IMAGE IN PDF
-        const xOffset = (pdfWidth - imgWidth) / 2; // Center horizontally
-        const yOffset = (pdfHeight - imgHeight) / 2; // Center vertically on the first page
-        // Add the image to the PDF
-        // let heightLeft = imgHeight;
+
+        const xOffset = (pdfWidth - imgWidth) / 2;
+        const yOffset = (pdfHeight - imgHeight) / 2;
+
 
         pdf.addImage(imgData, "PNG", xOffset, yOffset, imgWidth, imgHeight);
-        //Embeds the image (imgData) into the PDF:
-        // "PNG": Specifies the image format.
-        // xOffset, yOffset: Position of the image on the page (centered).
-        // imgWidth, imgHeight: Size of the image in millimeters.
-        // heightLeft -= pdfHeight;
-        // while (heightLeft > 0) {
-        //     position = -heightLeft + yOffset;
-        //     pdf.addPage();
-        //     pdf.addImage(imgData, "PNG", xOffset, position, imgWidth, imgHeight);
-        //     heightLeft -= pdfHeight;
-        // }
-        // Download the PDF
-        pdf.save("page.pdf");//Saves the created PDF to a file named page.pdf, which we can  download.
+
+        pdf.save("page.pdf");
         setButtonDisabled(false);
     }
     return (
-        <div>
+        <div className='container-fluid' >
             {loading ?
                 <div style={{
                     display: "flex",
-                    justifyContent: "center", // camelCase property names
+                    justifyContent: "center",
                     alignItems: "center",
-                    marginTop: "1rem" // String for non-numeric values
+                    marginTop: "1rem"
                 }}>  <Loader /></div>
                 :
-                <div className="card ">
+                <div >
                     {buttonDisabled ?
                         <div style={{
                             display: "flex",
-                            justifyContent: "center", // camelCase property names
+                            justifyContent: "center",
                             alignItems: "center",
                         }}>
                             <Icon
@@ -285,108 +178,33 @@ const ManufacturingFundPdf = () => {
                             <p className='fs-5'>Download PDF</p>
                             <Icon
                                 icon="material-symbols:download"
-                                className="nav-small-cap-icon fs-1   rounded-circle no-print "
+                                className="nav-small-cap-icon fs-1 rounded-circle no-print "
 
                             ></Icon>
                         </div>}
-                    <div className="card-body p-4" ref={cardbody}>
-                        <div >
-                            <img width="100%" src={tempImage} alt={tempname} className="img-fluid" />
-                        </div>
-                        <div className='row mt-2 rounded bgprint' style={{
-                            backgroundImage: `url(${BGImage})`,
-                            backgroundSize: "cover",
-                            backgroundRepeat: "no-repeat",
-                            padding: "3vw",
+                    <div className='position-relative'>
+                        <img className="img-fluid" src={tempImage} alt="Image" width="100%" />
+                        <div className='position-absolute bg-warning ' style={{
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%,30%)"
 
                         }} >
-                            <div className="col-md-3">
-                                <div className='d-flex align-items-center justify-content-center'>
-                                    <img className="img-fluid" src={attachmentImage} alt="image" ref={attachmentImageRef} />
-                                </div>
+                            <div>
+                                <div className='text-center ' ref={contactInfo}>With Warm regards</div>
                             </div>
-                            <div className="col-md-9">
-                                <div className="col-md-12" >
-                                    <div className='text-center h4' ref={contactInfo}>To Know More Please Contact</div>
-
-                                </div>
-                                <div className="col-md-12">
-                                    <div className='text-center h4 text-primary' ref={distributorInfo}>Distributer Partner:{getName}</div>
-                                </div>
-                                <div ref={hrlineref}>
-                                    <hr className="border border-primary border-3 opacity-75" >
-                                    </hr>
-                                </div>
-                                <div className='d-flex'>
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }} ref={arnimageDiv}>
-                                        <img src={arnicon} alt="ARN no" width="20px" height="20px" />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            marginLeft: "5px"
-                                        }} ref={arncontentDiv}>
-                                        <p className='fs-3 bold text-wrap text-break'>{getARN_No}</p>
-                                    </div>
-                                </div>
-
-
-                                <div className='d-flex' >
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }} ref={phoneimageDiv}>
-                                        <img src={phoneicon} alt="phone no" width="20px" height="20px" />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            marginLeft: "5px"
-                                        }} ref={phonecontentDiv}>
-                                        <p className='fs-4 bold text-wrap text-wrap text-break'>{getContact_No}</p>
-                                    </div>
-                                </div>
-                                <div className='d-flex'>
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }} ref={locationimageDiv} >
-                                        <img src={locationicon} alt="location" width="20px" height="20px" />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            marginLeft: "5px"
-                                        }} ref={locationcontentDiv}>
-                                        <p className='fs-4 bold text-wrap text-break'>{getAddress}</p>
-                                    </div>
-                                </div>
-                                <div className='d-flex'>
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }} ref={mailimageDiv}>
-                                        <img src={mailicon} alt="mail" width="20px" height="20px" />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            marginLeft: "5px"
-                                        }} ref={mailcontentDiv} >
-                                        <p className='bold email-text text-wrap text-break'>{getEmail}</p>
-                                    </div>
-                                </div>
+                            <div >
+                                <div className='text-center  text-primary' ref={distributorInfo}>{getName}</div>
+                            </div>
+                            <div ref={hrlineref}>
+                                <hr className="border border-primary border-3 opacity-75" >
+                                </hr>
+                            </div>
+                            <div className='d-flex align-items-center justify-content-center' ref={arncontentDiv}>
+                                <p className=' bold '>{getRole}</p>
                             </div>
                         </div>
                     </div>
-
                 </div>}
         </div>
     )

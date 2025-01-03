@@ -4,7 +4,9 @@ import axios from "axios"
 import Dashboardcard from './Dashboardcard.jsx';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/slice/loading';
+
 const Dashboard = () => {
+
     const dispatch = useDispatch();
 
     const [categories, setCategories] = useState([]);

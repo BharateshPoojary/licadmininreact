@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { setLoading } from '@/slice/loading';
 const SubCat = () => {
 
-    const { catid, catname } = useParams();
+    const { catid, catname, userId } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [subCategories, setSubCategories] = useState([]);
@@ -28,9 +28,9 @@ const SubCat = () => {
     useEffect(() => {
         fetchSubCatData();
     }, [])
-    const handleTemplate = (tempId, tempName, tempImg) => {
+    const handleTemplate = (tempName, tempImg) => {
         localStorage.setItem("Image", JSON.stringify({ tempImg }));
-        navigate(`/template/${tempId}/${tempName}`);
+        navigate(`/manufacturingpdf/${userId}/${tempName}`);
         dispatch(toggleSidebar(""))
     }
     return (
@@ -44,7 +44,7 @@ const SubCat = () => {
                                 {subCategories.length > 0 ?
                                     subCategories.map((subcat) => (
                                         <div className='col'
-                                            key={subcat.tempId} style={{ cursor: "pointer", }} onClick={() => handleTemplate(subcat.tempId, subcat.tempName, subcat.tempImg)}>
+                                            key={subcat.tempId} style={{ cursor: "pointer", }} onClick={() => handleTemplate(subcat.tempName, subcat.tempImg)}>
                                             <SubCatCard
                                                 tempId={subcat.tempId}
                                                 tempName={subcat.tempName}

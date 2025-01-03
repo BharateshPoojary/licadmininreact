@@ -1,12 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import InitialLoader from './InitialLoader';
 const Dashboardcard = ({ catId, catName, catIcon, emptyCategoryMessage }) => {
+    const { userId } = useParams();
     const { loading } = useSelector(state => state.loadingSlice);
     const navigate = useNavigate();
     const handleIndex = () => {
-        navigate(`/subcat/${catId}/${catName}`);
+        navigate(`/subcat/${catId}/${catName}/${userId}`);
     }
     return (//do not use div or else it will add one more node to dom 
         //use <></> jsx fragments it will not add div to dom 

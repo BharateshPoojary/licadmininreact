@@ -38,7 +38,7 @@ const Sidebar = () => {
                                 <span className="hide-menu" >Home</span>
                             </li>
                             <li className="sidebar-item" >
-                                <NavLink className="sidebar-link" to="/" aria-expanded="false" >
+                                <NavLink className="sidebar-link" to="dashboard" aria-expanded="false" >
                                     <Icon icon="solar:widget-add-line-duotone" ></Icon>
                                     <span className="hide-menu" >Dashboard</span>
                                 </NavLink>
