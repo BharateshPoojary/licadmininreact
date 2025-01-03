@@ -135,7 +135,7 @@ const Register = () => {
                                     </div>
                                     <div className="col-md-9">
                                         <div className="row">
-                                            <div className="col-md-12">
+                                            <div className="col-md-6">
                                                 <div className="mb-3">
                                                     <label htmlFor="Name" className="form-label" >Name:</label>
                                                     <input type="text" className="form-control bg-light " id="Name" required onChange={(e) => setName(e.target.value)} />

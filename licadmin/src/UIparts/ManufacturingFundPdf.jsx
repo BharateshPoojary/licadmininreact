@@ -70,7 +70,9 @@ const ManufacturingFundPdf = () => {
         });
 
         canvas.toBlob((blob) => {
-            saveAs(blob, "image.png"); // Use file-saver to save the blob as an image
+            // console.log("Blob", blob)//It includes a blob file
+            saveAs(blob, "licmf.png"); // Use file-saver to save the blob as an image
+            // A method provided by the file-saver library, used to trigger a download of the Blob as a file.
             setButtonDisabled(false);
         }, "image/png");
     }
@@ -95,7 +97,7 @@ const ManufacturingFundPdf = () => {
                                 icon="line-md:downloading-loop"
                                 className="nav-small-cap-icon fs-1 "
                             ></Icon></div> :
-                        <div className='d-flex justify-content-end p-3 align-items-center '
+                        <div className='d-flex justify-content-end p-3 align-items-center  my-3 rounded'
                             style={{
                                 cursor: "pointer",
                                 backgroundColor: isHovered ? "#B48A22" : "#EEA227",
