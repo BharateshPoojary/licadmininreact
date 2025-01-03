@@ -1,0 +1,30 @@
+@media (max-width: 4000px) {
+  .content {
+    font-size: 0.8vw;
+  }
+}
+@media (max-width: 3000px) {
+  .content {
+    font-size: 1vw;
+  }
+}
+@media (max-width: 1600px) {
+  .content {
+    font-size: 1.6vw;
+  }
+}
+@media (max-width: 985px) {
+  .content {
+    font-size: 2.2vw;
+  }
+}
+@media (max-width: 860px) {
+  .content {
+    font-size: 2.6vw;
+  }
+}
+@media (max-width: 860px) {
+  .content {
+    font-size: 3vw;
+  }
+}

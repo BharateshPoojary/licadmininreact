@@ -7,7 +7,7 @@ import jsPDF from "jspdf";
 import Loader from './Loader.jsx';
 import { setLoading } from '@/slice/loading.js';
 import { useDispatch, useSelector } from 'react-redux';
-import arnicon from "../assets/images/text-document-line-icon.png"
+import "./content.css"
 const ManufacturingFundPdf = () => {
     const dispatch = useDispatch();
     const arnimageDiv = useRef();
@@ -182,23 +182,28 @@ const ManufacturingFundPdf = () => {
 
                             ></Icon>
                         </div>}
-                    <div className='position-relative'>
-                        <img className="img-fluid" src={tempImage} alt="Image" width="100%" />
-                        <div className='position-absolute bg-warning ' style={{
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%,30%)"
-
-                        }} >
+                    <div style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: 'auto' }}>
+                        <img src={tempImage}
+                            alt="Background"
+                            style={{ width: '100%', height: 'auto' }} />
+                        <div className=' content'
+                            style={{
+                                position: 'absolute',
+                                top: '73%', // Adjust to position over the red-bordered content
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                textAlign: 'center',
+                                paddingLeft: '26px',
+                                paddingRight: "26px",
+                                zIndex: 2,
+                                whiteSpace: 'nowrap', // Prevents text wrapping,
+                                background: "linear-gradient(#FDF5D6,#F9E79E)"
+                            }} >
                             <div>
-                                <div className='text-center ' ref={contactInfo}>With Warm regards</div>
+                                <div className='text-center ' ref={contactInfo}>With Warm regards,</div>
                             </div>
                             <div >
-                                <div className='text-center  text-primary' ref={distributorInfo}>{getName}</div>
-                            </div>
-                            <div ref={hrlineref}>
-                                <hr className="border border-primary border-3 opacity-75" >
-                                </hr>
+                                <div className='text-center  text-primary' ref={distributorInfo}>{getName},</div>
                             </div>
                             <div className='d-flex align-items-center justify-content-center' ref={arncontentDiv}>
                                 <p className=' bold '>{getRole}</p>
