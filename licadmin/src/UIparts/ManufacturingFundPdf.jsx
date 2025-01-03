@@ -50,52 +50,57 @@ const ManufacturingFundPdf = () => {
         }
     }
 
-    const convertImageToBase64 = async (url) => {
-        //converting image to base 64 to overcome cors error for which we have to first convert the img url to blob and then base 64 which we can use ang image src 
-        try {
-            const ImageUrlResponse = await axios.get(url, { responseType: "blob" });
-            console.log(ImageUrlResponse.data);//getting a blob response 
-            const base64url = await convertblobToBase64(ImageUrlResponse.data);
-            // console.log("URL CONVERTED TO BLOB", base64url);
-            return base64url;
-        } catch (error) {
-            console.log(error.response?.data || error.message);
-        }
-    }
+    // const convertImageToBase64 = async (url) => {
+    //     //converting image to base 64 to overcome cors error for which we have to first convert the img url to blob and then base 64 which we can use ang image src 
+    //     try {
+    //         const ImageUrlResponse = await axios.get(url, { responseType: "blob" });
+    //         console.log(ImageUrlResponse.data);//getting a blob response 
+    //         const base64url = await convertblobToBase64(ImageUrlResponse.data);
+    //         // console.log("URL CONVERTED TO BLOB", base64url);
+    //         return base64url;
+    //     } catch (error) {
+    //         console.log(error.response?.data || error.message);
+    //     }
+    // }
 
-    const convertblobToBase64 = (blob) => {
-        return new Promise((resolve, reject) => {//creating a new promise and it includes two parameter reolve and reject
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                resolve(reader.result)
-            }
-            reader.onerror = (error) => {
-                reject(error)
-            }
-            reader.readAsDataURL(blob)//It will trigger the onload end event if the blob is converted to base64 else error will be onerror will be triggered
-        })
-    }
+    // const convertblobToBase64 = (blob) => {
+    //     return new Promise((resolve, reject) => {//creating a new promise and it includes two parameter reolve and reject
+    //         const reader = new FileReader();
+    //         reader.readAsDataURL(blob)//It will trigger the onload end event if the blob is converted to base64 else error will be thrown onerror will be triggered
+    //         reader.onloadend = () => {
+    //             resolve(reader.result)//result include the base64 url for the blob which we can use to display the image 
+    //         }
+    //         reader.onerror = (error) => {
+    //             reject(error)
+    //         }
+    //     })
+    // }
 
-    // const fetchImage = async (profileImgurl) => {
-    //     dispatch(setLoading(true))
-    const fetchblobimage = async () => {
-        const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
-        // const attachmentImg = await convertImageToBase64(corsissueresolveurl + profileImgurl);
-        // console.log("profile Image Url", profileImgurl);
+    // // const fetchImage = async (profileImgurl) => {
+    // //     dispatch(setLoading(true))
+    // const fetchblobimage = async () => {
+    //     const corsissueresolveurl = 'https://cors-anywhere.herokuapp.com/';
+    //     // const attachmentImg = await convertImageToBase64(corsissueresolveurl + profileImgurl);
+    //     // console.log("profile Image Url", profileImgurl);
 
-        // setAttachmentImage(attachmentImg);
-        // const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
-        // console.log("TempImage", tempImage);
-        // setTempImage(tempImage)
-        const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
-        console.log("Attachment BG Imgae", attachmentBGImage);
-        // setBGImage(attachmentBGImage)
-        // dispatch(setLoading(false))
-    }
-    useEffect(() => {
-        fetchblobimage();
-    }, [])
-    const proxyFunction = async (proxyurl) => {
+    //     // setAttachmentImage(attachmentImg);
+    //     // const tempImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/${tempImg}`)
+    //     // console.log("TempImage", tempImage);
+    //     // setTempImage(tempImage)
+    //     const attachmentBGImage = await convertImageToBase64(`${corsissueresolveurl}http://lic.swiftmore.in/LicAdmin/images/Co-Brand-NFO-LIC-MF-Manufacturing-fund-A4-03.png`)
+    //     console.log("Attachment BG Imgae", attachmentBGImage);
+    //     // setBGImage(attachmentBGImage)
+    //     // dispatch(setLoading(false))
+    // }
+    // useEffect(() => {
+    //     fetchblobimage();
+    // }, [])
+    const proxyFunction = async (proxyurl) => {//proxy servers are intermediary servers between the client and actual server we are intended to send request 
+        //but because of security reasons like cors we are not able to send direct request like here we are accessing the image but beacause of cors we cannot 
+        //access those image and also we cannot resolve cors issue of image as we cannot set the specific headers like we do in normal php script 
+        //so proxy.php is an intermediary which includes speicifc headers that resolve cors so from proxy.php we are accessing the specific images
+        //as from server to server of same origin there is no cors issue so we can easily access the image and returning
+        //the base64 content and mime type  as response to client from proxy. 
         try {
             const proxy_response = await axios.get(proxyurl);
             return proxy_response.data;
@@ -148,7 +153,7 @@ const ManufacturingFundPdf = () => {
     const DownloadPDF = async () => {
         setButtonDisabled(true);
         const element = cardbody.current; // You can specify a specific element instead of the whole body.
-        // Capture the content as a canvas
+        // we are capturing this particular element as canvas instead of whole body 
         arnimageDiv.current.style.alignItems = "end";
         arncontentDiv.current.style.alignItems = "start";
         arncontentDiv.current.style.letterSpacing = "3px";
@@ -176,7 +181,11 @@ const ManufacturingFundPdf = () => {
             useCORS: true, allowTaint: true, scale: 2, // Increase the scale for better quality
             width: element.offsetWidth,
             height: element.offsetHeight,
-        });
+        });//converting html to canvas  
+        //also specifying  the height and width of image by conidering the  offset  height and width of element
+        //offset means it considers content+padding +border width and height in px of the particular htmlelement    
+        //e.g.offsetWidth = 100px (content) + 20px (padding) + 10px (border) = 130px
+
         arnimageDiv.current.style.alignItems = "center";
         arncontentDiv.current.style.alignItems = "center";
         arncontentDiv.current.style.letterSpacing = "0";
@@ -207,19 +216,31 @@ const ManufacturingFundPdf = () => {
 
         // Convert the canvas to an image
         const imgData = canvas.toDataURL("image/png");
+        //This converts the content of the canvas element into a Base64-encoded string representing the image in PNG format. This imgData will be used later to embed the image in the PDF.
         // Create a PDF document
         const pdf = new jsPDF("p", "mm", "a4");
+        //         new jsPDF("p", "mm", "a4") creates a new PDF document:
+        // "p": Portrait orientation.
+        // "mm": Unit of measurement in millimeters.
+        // "a4": Paper size of A4.
         const pdfWidth = 210; // A4 width in mm
         const pdfHeight = 297; // A4 height in mm
-        const imgWidth = 200; // A4 width in mm
+        // Dimensions of an A4 page in millimeters.
+        const imgWidth = 200;
         const imgHeight = 270;
+        //Dimensions of the image that will be embedded in the PDF.
         // const pageHeight = 297; // A4 height in mm
+        //POSITION OF IMAGE IN PDF
         const xOffset = (pdfWidth - imgWidth) / 2; // Center horizontally
         const yOffset = (pdfHeight - imgHeight) / 2; // Center vertically on the first page
         // Add the image to the PDF
         // let heightLeft = imgHeight;
-        let position = yOffset;
-        pdf.addImage(imgData, "PNG", xOffset, position, imgWidth, imgHeight);
+
+        pdf.addImage(imgData, "PNG", xOffset, yOffset, imgWidth, imgHeight);
+        //Embeds the image (imgData) into the PDF:
+        // "PNG": Specifies the image format.
+        // xOffset, yOffset: Position of the image on the page (centered).
+        // imgWidth, imgHeight: Size of the image in millimeters.
         // heightLeft -= pdfHeight;
         // while (heightLeft > 0) {
         //     position = -heightLeft + yOffset;
@@ -228,7 +249,7 @@ const ManufacturingFundPdf = () => {
         //     heightLeft -= pdfHeight;
         // }
         // Download the PDF
-        pdf.save("page.pdf");
+        pdf.save("page.pdf");//Saves the created PDF to a file named page.pdf, which we can  download.
         setButtonDisabled(false);
     }
     return (
