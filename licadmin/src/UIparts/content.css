@@ -6,11 +6,13 @@
 @media (max-width: 3000px) {
   .content {
     font-size: 1vw;
+    padding-top: 40px;
   }
 }
 @media (max-width: 1600px) {
   .content {
     font-size: 1.6vw;
+    padding-top: 0;
   }
 }
 @media (max-width: 985px) {

@@ -71,10 +71,10 @@ const ManufacturingFundPdf = () => {
 
         canvas.toBlob((blob) => {
             // console.log("Blob", blob)//It includes a blob file
-            saveAs(blob, "licmf.png"); // Use file-saver to save the blob as an image
+            saveAs(blob, "licmf.jpg"); // Use file-saver to save the blob as an image
             // A method provided by the file-saver library, used to trigger a download of the Blob as a file.
             setButtonDisabled(false);
-        }, "image/png");
+        }, "image/jpg");
     }
     return (
         <div className='container-fluid' >
@@ -113,11 +113,13 @@ const ManufacturingFundPdf = () => {
 
                             ></Icon>
                         </div>}
-                    <div ref={Image}>
-                        <div style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: 'auto' }}>
+
+                    <div style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: 'auto' }}>
+                        <div ref={Image}>
                             <img src={tempImage}
                                 alt="Background"
-                                style={{ width: '100%', height: 'auto' }} />
+                                style={{ width: '100%', height: 'auto' }}
+                            />
                             <div className=' content'
                                 style={{
                                     position: 'absolute',
@@ -143,6 +145,7 @@ const ManufacturingFundPdf = () => {
                             </div>
                         </div>
                     </div>
+
                 </div>}
         </div>
     )

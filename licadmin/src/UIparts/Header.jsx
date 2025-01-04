@@ -2,6 +2,7 @@ import React from 'react'
 import user from "../assets/images/profile/user-1.jpg";
 import { useDispatch } from 'react-redux';
 import { toggleSidebar } from '@/slice/sidebarslice';
+import { NavLink } from 'react-router-dom';
 const Header = () => {
     const dispatch = useDispatch();
     const showSidebar = () => {
@@ -42,13 +43,14 @@ const Header = () => {
                                     aria-labelledby="drop2"
 
                                 >
-                                    <div className="message-body" >
-                                        <a
-                                            href='#'
+                                    <div className="message-body " >
+                                        <NavLink
+                                            to="adminlogin"
                                             className="btn btn-outline-primary mx-3 mt-2 d-block"
+
                                         >
                                             Login
-                                        </a>
+                                        </NavLink>
                                     </div>
                                 </div>
                             </li>
