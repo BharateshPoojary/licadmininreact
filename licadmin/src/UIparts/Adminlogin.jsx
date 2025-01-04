@@ -33,11 +33,11 @@ const Adminlogin = () => {
             console.log(result);
             if (result === 1) {
                 toast.success(message);
+                localStorage.setItem("UserType", JSON.stringify({ userType }));
+                navigate(`/dashboard`);
             } else {
                 toast.error(message);
             }
-            localStorage.setItem("UserType", { userType });
-            navigate(`/dashboard`);
         } catch (error) {
             toast.error("Error during login");
             console.log(error.response?.data || error.message);

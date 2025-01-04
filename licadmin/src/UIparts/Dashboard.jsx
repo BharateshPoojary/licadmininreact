@@ -40,8 +40,8 @@ const Dashboard = () => {
                                     <div className='col ' key={category.catId}>
                                         {/* This key attribute is important as it helps react to understand which content is changed */}
                                         <Dashboardcard
-                                            catId={category.catId}
-                                            catName={category.catName}
+                                            catid={category.catId}
+                                            catname={category.catName}
                                             catIcon={`http://lic.swiftmore.in/LicAdmin/${category.catIcon}`}
                                         />
                                     </div>

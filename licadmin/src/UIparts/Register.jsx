@@ -104,7 +104,8 @@ const Register = () => {
                 const post_response = await axios.post("http://lic.swiftmore.in/LicAdmin/insertDataapi.php", formData);
                 console.log(post_response.data);
                 const { id } = post_response.data;
-                navigate(`/dashboard/${id}`);
+                localStorage.setItem("userId", JSON.stringify({ id }));
+                navigate(`/dashboard`);
             } catch (error) {
                 console.log(error.response?.data || error.message);
             }

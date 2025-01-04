@@ -1,7 +1,6 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import html2canvas from "html2canvas";
 import { saveAs } from 'file-saver';
 import Loader from './Loader.jsx';
@@ -13,13 +12,25 @@ const ManufacturingFundPdf = () => {
     const dispatch = useDispatch();
     const Image = useRef();
     const { loading } = useSelector(state => state.loadingSlice);
-    const { userId } = useParams();
-    const { tempImg } = JSON.parse(localStorage.getItem("Image"));
+    // const { userType } = JSON.parse(localStorage.getItem("UserType"));
     const [getName, setGetName] = useState('');
     const [isHovered, setIsHovered] = useState(false);
     const [getRole, setRole] = useState('');
-    const [tempImage, setTempImage] = useState('');
+    const [tempImageBase64, setTempImageBase64] = useState('');
     const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [userId, setUserId] = useState('');
+    const [tempImage, settempImage] = useState('');
+    const { userType } = JSON.parse(localStorage.getItem("UserType"));
+    const userIdData = JSON.parse(localStorage.getItem("userId"));
+    const tempCreds = JSON.parse(localStorage.getItem("tempCreds"));
+    useEffect(() => {
+        if (userType === "User") {
+            setUserId(userIdData?.userId || '');
+        }
+        settempImage(tempCreds?.tempImg || '');
+        console.log("Rendered");
+        console.log("After render", tempCreds.tempImg)
+    }, [userType]);
 
     const getUserData = async (userId) => {
         try {
@@ -41,24 +52,33 @@ const ManufacturingFundPdf = () => {
 
     const fetchImage = async () => {
         dispatch(setLoading(true))
-        const templateImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${tempImg}`);
-        setTempImage(`data:${templateImage.MimeType};base64,${templateImage.Content}`);
+        console.log("temp Image", tempImage)
+        const templateImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${tempImage}`);
+        setTempImageBase64(`data:${templateImage.MimeType};base64,${templateImage.Content}`);
         dispatch(setLoading(false))
     }
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { Name, Role } = await getUserData(userId);
-                setGetName(Name);
-                setRole(Role);
-                fetchImage();
+                if (userType === "User") {
+                    const { Name, Role } = await getUserData(userId);
+                    setGetName(Name);
+                    setRole(Role);
+                    fetchImage();
+                } else {
+                    console.log("I am admin")
+                    setGetName("");
+                    setRole("");
+                    fetchImage();
+                    console.log("tempImage", tempImage)
+                }
             } catch (error) {
                 console.log(error.response?.data || error.message);
             }
         }
         fetchData();
-    }, [userId])
+    }, [userType])
 
     const DownloadPDF = async () => {
         setButtonDisabled(true);
@@ -116,7 +136,7 @@ const ManufacturingFundPdf = () => {
 
                     <div style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: 'auto' }}>
                         <div ref={Image}>
-                            <img src={tempImage}
+                            <img src={tempImageBase64}
                                 alt="Background"
                                 style={{ width: '100%', height: 'auto' }}
                             />

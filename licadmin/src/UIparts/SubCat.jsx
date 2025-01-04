@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import SubCatCard from './SubCatCard';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toggleSidebar } from '@/slice/sidebarslice';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/slice/loading';
 const SubCat = () => {
 
-    const { catid, catname, userId } = useParams();
+    // const { catid, catname, userId } = useParams();
+    const { catid, catname } = JSON.parse(localStorage.getItem("catDetails"));
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [subCategories, setSubCategories] = useState([]);
@@ -29,8 +30,8 @@ const SubCat = () => {
         fetchSubCatData();
     }, [])
     const handleTemplate = (tempName, tempImg) => {
-        localStorage.setItem("Image", JSON.stringify({ tempImg }));
-        navigate(`/manufacturingpdf/${userId}/${tempName}`);
+        localStorage.setItem("tempCreds", JSON.stringify({ tempName, tempImg }));
+        navigate(`/manufacturingpdf`);
         dispatch(toggleSidebar(""))
     }
     return (
