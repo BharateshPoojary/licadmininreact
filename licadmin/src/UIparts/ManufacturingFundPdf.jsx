@@ -19,15 +19,16 @@ const ManufacturingFundPdf = () => {
     const [tempImageBase64, setTempImageBase64] = useState('');
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [userId, setUserId] = useState('');
-    const [tempImage, settempImage] = useState('');
+    // const [tempImage, settempImage] = useState('');
     const { userType } = JSON.parse(localStorage.getItem("UserType"));
     const userIdData = JSON.parse(localStorage.getItem("userId"));
     const tempCreds = JSON.parse(localStorage.getItem("tempCreds"));
+    console.log("tempCreds:", tempCreds);
     useEffect(() => {
         if (userType === "User") {
             setUserId(userIdData?.userId || '');
         }
-        settempImage(tempCreds?.tempImg || '');
+        // settempImage(tempCreds?.tempImg || '');
         console.log("Rendered");
         console.log("After render", tempCreds.tempImg)
     }, [userType]);
@@ -52,8 +53,8 @@ const ManufacturingFundPdf = () => {
 
     const fetchImage = async () => {
         dispatch(setLoading(true))
-        console.log("temp Image", tempImage)
-        const templateImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${tempImage}`);
+        console.log("temp Image", tempCreds.tempImg)
+        const templateImage = await proxyFunction(`http://lic.swiftmore.in/LicAdmin/proxy.php?url=${tempCreds.tempImg}`);
         setTempImageBase64(`data:${templateImage.MimeType};base64,${templateImage.Content}`);
         dispatch(setLoading(false))
     }
@@ -67,11 +68,11 @@ const ManufacturingFundPdf = () => {
                     setRole(Role);
                     fetchImage();
                 } else {
-                    console.log("I am admin")
-                    setGetName("");
-                    setRole("");
+                    // console.log("UserType", userType)
+                    // console.log("I am admin")
+
                     fetchImage();
-                    console.log("tempImage", tempImage)
+                    // console.log("tempImage", tempCreds.tempImg)
                 }
             } catch (error) {
                 console.log(error.response?.data || error.message);
@@ -136,6 +137,7 @@ const ManufacturingFundPdf = () => {
 
                     <div style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: 'auto' }}>
                         <div ref={Image}>
+
                             <img src={tempImageBase64}
                                 alt="Background"
                                 style={{ width: '100%', height: 'auto' }}
